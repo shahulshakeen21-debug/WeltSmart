@@ -4,45 +4,78 @@
 
 @layer base {
   body {
-    @apply bg-industrial-950 text-industrial-100 antialiased selection:bg-orange-500/30 selection:text-orange-200;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-industrial-950 text-industrial-200 antialiased selection:bg-forge-500/25 selection:text-forge-300;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+    letter-spacing: -0.011em;
+  }
+
+  /* Monospace numbers for consistent numerical data */
+  .font-mono {
+    font-feature-settings: "tnum", "zero";
   }
 }
 
-/* Custom scrollbars */
+/* Industrial technical scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #12151a;
+  background: #0a0c10;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2e3744;
-  border-radius: 4px;
+  background: #252b37;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff6b00;
+  background: #434d61;
 }
 
-/* Industrial grid & spark background */
-.bg-grid-pattern {
-  background-size: 32px 32px;
+/* Precision technical grid */
+.tech-grid {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+}
+
+.tech-grid-dense {
+  background-size: 16px 16px;
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-.bg-dot-pattern {
-  background-size: 24px 24px;
-  background-image: radial-gradient(rgba(255, 107, 0, 0.15) 1px, transparent 1px);
+/* Subtle corner crosshairs for industrial blueprint feel */
+.tech-crosshair {
+  position: relative;
+}
+.tech-crosshair::before {
+  content: "+";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #434d61;
+  pointer-events: none;
+}
+.tech-crosshair::after {
+  content: "+";
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #434d61;
+  pointer-events: none;
 }
 
 /* Print Styles */
 @media print {
   body {
     background: white !important;
-    color: black !important;
+    color: #0f172a !important;
   }
   .no-print {
     display: none !important;

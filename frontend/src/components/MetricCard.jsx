@@ -1,43 +1,49 @@
 import React from "react";
 
-export default function MetricCard({ title, value, subtitle, icon: Icon, badge, color = "orange" }) {
-  const colorMap = {
-    orange: "text-orange-500 bg-orange-500/10 border-orange-500/30",
-    amber: "text-amber-400 bg-amber-400/10 border-amber-400/30",
-    blue: "text-blue-400 bg-blue-400/10 border-blue-400/30",
-    emerald: "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-    purple: "text-purple-400 bg-purple-400/10 border-purple-400/30",
-  };
+export default function MetricCard({ title, value, subtitle, icon: Icon, badge, color = "orange", code }) {
+  const accentBorder = color === "emerald" 
+    ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" 
+    : "border-forge-500/30 text-forge-400 bg-forge-500/10";
 
   return (
-    <div className="bg-industrial-900/80 border border-industrial-800 rounded-xl p-5 hover:border-industrial-700 transition-all relative overflow-hidden group">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <span className="text-xs font-semibold text-industrial-400 uppercase tracking-wider block mb-1">
-            {title}
-          </span>
-          <div className="text-2xl font-black text-white font-mono tracking-tight">
+    <div className="bg-industrial-900 border border-industrial-750 rounded-sm p-4 hover:border-industrial-700 transition-colors">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            {code && (
+              <span className="text-[9px] font-mono font-semibold text-industrial-500 uppercase tracking-wider">
+                {code}
+              </span>
+            )}
+            <span className="text-[11px] font-semibold text-industrial-400 uppercase tracking-wider block font-mono">
+              {title}
+            </span>
+          </div>
+
+          <div className="text-xl sm:text-2xl font-bold text-white font-mono tracking-tight">
             {value}
           </div>
+
           {subtitle && (
-            <div className="text-xs text-industrial-400 mt-1 flex items-center gap-1.5">
+            <div className="text-[11px] text-industrial-400">
               {subtitle}
             </div>
           )}
         </div>
+
         {Icon && (
-          <div className={`p-3 rounded-lg border ${colorMap[color] || colorMap.orange} group-hover:scale-110 transition-transform`}>
-            <Icon className="w-5 h-5" />
+          <div className={`p-2 rounded-xs border ${accentBorder} shrink-0`}>
+            <Icon className="w-4 h-4" />
           </div>
         )}
       </div>
+
       {badge && (
-        <div className="mt-3 pt-3 border-t border-industrial-800/80 flex items-center justify-between text-[11px]">
-          <span className="text-industrial-400">{badge.label}</span>
+        <div className="mt-3 pt-2.5 border-t border-industrial-800 flex items-center justify-between text-[10px] font-mono">
+          <span className="text-industrial-500">{badge.label}</span>
           <span className="font-semibold text-emerald-400">{badge.value}</span>
         </div>
       )}
     </div>
   );
 }
-

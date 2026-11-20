@@ -15,8 +15,9 @@ import {
   Save, 
   Plus, 
   Trash2,
-  Sparkles,
-  Zap
+  Terminal,
+  Cpu,
+  Database
 } from "lucide-react";
 
 export default function AdminPanel() {
@@ -67,9 +68,9 @@ export default function AdminPanel() {
         prev.map((s) => (s.key === key ? { ...s, value: editValue } : s))
       );
       setEditingKey(null);
-      showMessage("Setting updated successfully!");
+      showMessage("Benchmark parameter updated successfully.");
     } catch (err) {
-      alert("Error updating setting: " + err.message);
+      alert("Error updating parameter: " + err.message);
     }
   };
 
@@ -86,7 +87,7 @@ export default function AdminPanel() {
             : t
         )
       );
-      showMessage(`Updated pricing for ${tool.name}`);
+      showMessage(`Calibrated wear price for ${tool.name}`);
     } catch (err) {
       alert("Error: " + err.message);
     }
@@ -98,7 +99,7 @@ export default function AdminPanel() {
       setConsumablesList((prev) =>
         prev.map((c) => (c.id === consumable.id ? { ...c, unit_price: parseFloat(newPrice) } : c))
       );
-      showMessage(`Updated unit rate for ${consumable.name}`);
+      showMessage(`Calibrated unit tariff for ${consumable.name}`);
     } catch (err) {
       alert("Error: " + err.message);
     }
@@ -111,38 +112,42 @@ export default function AdminPanel() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-industrial-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen bg-industrial-950 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-2 border-forge-500 border-t-transparent animate-spin rounded-none" />
+        <span className="font-mono text-xs uppercase tracking-widest text-industrial-400">
+          ACCESSING CENTRAL BENCHMARK REGISTRY...
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-industrial-950 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-industrial-950 text-industrial-100 py-8 px-4 sm:px-6 lg:px-8 tech-grid">
+      <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-industrial-800">
-          <div>
+        {/* Top Control Header */}
+        <div className="bg-industrial-900 border border-industrial-800 p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                <ShieldAlert className="w-4 h-4" />
+              <span className="font-mono text-[10px] text-amber-400 uppercase tracking-widest px-1.5 py-0.5 bg-amber-950 border border-amber-800/60 flex items-center gap-1">
+                <ShieldAlert className="w-3 h-3 text-amber-400" />
+                CENTRAL AUTHORITY // ROOT REGISTRY
               </span>
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-                Central Authority Console
+              <span className="font-mono text-[10px] text-industrial-400">
+                AUTH: <strong className="text-white font-mono">{user?.email || "sysadmin@weldcost.org"}</strong>
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
-              WeldCost Administration & Price Engine Control
+            <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white uppercase">
+              Benchmark Registry & Calculation Engine Authority
             </h1>
-            <p className="text-xs text-industrial-400">
-              Logged in as Administrator: <strong className="text-white">{user?.email}</strong>. Changes reflect instantly across all calculators.
+            <p className="text-xs font-mono text-industrial-400">
+              Modifications commit directly to runtime state across all client quote engines and public ledger pages.
             </p>
           </div>
 
           {statusMessage && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold animate-pulse">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-mono text-xs">
+              <CheckCircle2 className="w-3.5 h-3.5" />
               <span>{statusMessage}</span>
             </div>
           )}
@@ -150,32 +155,32 @@ export default function AdminPanel() {
 
         {/* Platform Overview Metrics */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <MetricCard
-              title="Registered Users"
+              title="REGISTERED OPERATORS"
               value={stats.total_users}
-              subtitle={`${stats.welders_count} Welders | ${stats.customers_count} Customers`}
+              subtitle={`${stats.welders_count} Artisan Shops | ${stats.customers_count} Industrial Clients`}
               icon={Users}
               color="blue"
             />
             <MetricCard
-              title="Managed Tools"
+              title="CATALOGED ASSETS"
               value={stats.tools_count}
-              subtitle="100% database driven"
+              subtitle="100% telemetry tracked wear assets"
               icon={Wrench}
               color="orange"
             />
             <MetricCard
-              title="Active Consumables"
+              title="ACTIVE CONSUMABLES"
               value={stats.consumables_count}
-              subtitle="Electrodes, discs, wire, gas"
+              subtitle="Rods, wire, shielding gas, abrasives"
               icon={Layers}
               color="amber"
             />
             <MetricCard
-              title="Total Quotes Issued"
+              title="TOTAL QUOTES ISSUED"
               value={stats.quotes_count}
-              subtitle={`₹${stats.total_quote_value.toLocaleString()} total value`}
+              subtitle={`₹${stats.total_quote_value.toLocaleString()} total gross volume`}
               icon={FileText}
               color="emerald"
             />
@@ -185,23 +190,24 @@ export default function AdminPanel() {
         {/* Tab Selector */}
         <div className="flex flex-wrap items-center gap-2 border-b border-industrial-800 pb-2">
           {[
-            { id: "settings", label: "Central Rates & Settings", icon: Settings },
-            { id: "consumables", label: "Consumable Unit Prices", icon: Layers },
-            { id: "tools", label: "Welding Tools & Wear", icon: Wrench },
-            { id: "services", label: "Service Price Ranges", icon: BookOpen },
+            { id: "settings", code: "CFG-01", label: "Central Rates & Multipliers", icon: Settings },
+            { id: "consumables", code: "BOM-02", label: "Consumable Unit Tariffs", icon: Layers },
+            { id: "tools", code: "AST-03", label: "Equipment Wear & Recovery", icon: Wrench },
+            { id: "services", code: "PKG-04", label: "Work Package Price Bounds", icon: BookOpen },
           ].map((tab) => {
             const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all ${
-                  activeTab === tab.id
-                    ? "bg-orange-500 text-white shadow-weld-glow"
-                    : "bg-industrial-900 text-industrial-400 hover:text-white border border-industrial-800"
+                className={`flex items-center gap-2 px-3.5 py-2 font-mono text-xs uppercase tracking-wider transition-colors border ${
+                  isActive
+                    ? "bg-forge-600 text-white border-forge-500 font-bold"
+                    : "bg-industrial-900 text-industrial-400 hover:text-white border-industrial-800"
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <span className={`text-[10px] ${isActive ? "text-orange-200" : "text-industrial-500"}`}>{tab.code}</span>
                 <span>{tab.label}</span>
               </button>
             );
@@ -210,25 +216,28 @@ export default function AdminPanel() {
 
         {/* Tab 1: Global Benchmark Settings */}
         {activeTab === "settings" && (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <div>
-              <h3 className="text-base font-bold text-white">Platform Benchmark System Settings</h3>
-              <p className="text-xs text-industrial-400">
-                Updating these parameters changes the default calculation formulas across the entire platform without touching any code.
-              </p>
+          <div className="bg-industrial-900 border border-industrial-800 p-5 space-y-4">
+            <div className="pb-3 border-b border-industrial-800 flex justify-between items-center">
+              <div>
+                <span className="font-mono text-[10px] text-forge-500 uppercase tracking-widest block">REGISTRY // PARAMETERS</span>
+                <h3 className="text-xs font-bold font-mono text-white uppercase">Engine Core Benchmark Constants</h3>
+              </div>
+              <span className="font-mono text-[11px] text-industrial-400 bg-industrial-950 px-2 py-0.5 border border-industrial-800">
+                {settingsList.length} ACTIVE CONSTANTS
+              </span>
             </div>
 
-            <div className="divide-y divide-industrial-800">
+            <div className="divide-y divide-industrial-800/80 font-mono text-xs">
               {settingsList.map((setting) => (
-                <div key={setting.id} className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="max-w-xl">
+                <div key={setting.id} className="py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="max-w-xl space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-xs text-orange-400">{setting.key}</span>
-                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-industrial-950 border border-industrial-800 text-industrial-400">
+                      <span className="font-bold text-forge-400 text-xs">{setting.key}</span>
+                      <span className="text-[9px] uppercase px-1.5 py-0.5 bg-industrial-950 border border-industrial-800 text-industrial-400">
                         {setting.category}
                       </span>
                     </div>
-                    <p className="text-xs text-industrial-300 mt-1">{setting.description}</p>
+                    <p className="text-[11px] text-industrial-400 font-sans">{setting.description}</p>
                   </div>
 
                   <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -238,18 +247,18 @@ export default function AdminPanel() {
                           type="text"
                           value={editValue}
                           onChange={(e) => setEditValue(e.target.value)}
-                          className="bg-industrial-950 border border-orange-500 rounded-lg px-3 py-1.5 text-xs font-mono text-white outline-none w-40"
+                          className="bg-industrial-950 border border-forge-500 p-1.5 font-mono text-xs text-white outline-none w-36"
                         />
                         <button
                           onClick={() => handleUpdateSetting(setting.key)}
-                          className="p-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white"
+                          className="p-1.5 bg-emerald-600 hover:bg-emerald-500 text-white"
                           title="Save"
                         >
                           <Save className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setEditingKey(null)}
-                          className="p-2 rounded-lg bg-industrial-800 text-industrial-400 hover:text-white"
+                          className="p-1.5 bg-industrial-800 text-industrial-400 hover:text-white"
                           title="Cancel"
                         >
                           ✕
@@ -257,7 +266,7 @@ export default function AdminPanel() {
                       </div>
                     ) : (
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-mono font-bold text-white bg-industrial-950 px-3 py-1 rounded-lg border border-industrial-800">
+                        <span className="text-xs font-mono font-bold text-white bg-industrial-950 px-2.5 py-1 border border-industrial-800">
                           {setting.value}
                         </span>
                         <button
@@ -265,10 +274,10 @@ export default function AdminPanel() {
                             setEditingKey(setting.key);
                             setEditValue(setting.value);
                           }}
-                          className="p-1.5 text-industrial-400 hover:text-orange-400 transition-colors"
-                          title="Edit"
+                          className="p-1.5 text-industrial-400 hover:text-forge-400 transition-colors"
+                          title="Edit Constant"
                         >
-                          <Edit3 className="w-4 h-4" />
+                          <Edit3 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     )}
@@ -281,39 +290,42 @@ export default function AdminPanel() {
 
         {/* Tab 2: Consumables Unit Prices */}
         {activeTab === "consumables" && (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <div>
-              <h3 className="text-base font-bold text-white">Consumable Pricing Master Table</h3>
-              <p className="text-xs text-industrial-400">
-                Unit prices used by the Cost Engine for rods, wire, gas, and abrasive discs.
-              </p>
+          <div className="bg-industrial-900 border border-industrial-800 p-5 space-y-4">
+            <div className="pb-3 border-b border-industrial-800 flex justify-between items-center">
+              <div>
+                <span className="font-mono text-[10px] text-forge-500 uppercase tracking-widest block">REGISTRY // CONSUMABLES</span>
+                <h3 className="text-xs font-bold font-mono text-white uppercase">Consumable Unit Tariffs & Yield Rates</h3>
+              </div>
+              <span className="font-mono text-[11px] text-industrial-400 bg-industrial-950 px-2 py-0.5 border border-industrial-800">
+                {consumablesList.length} ENTRIES
+              </span>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
+              <table className="w-full text-xs text-left font-mono border-collapse">
                 <thead>
-                  <tr className="border-b border-industrial-800 text-industrial-400 font-mono uppercase">
-                    <th className="py-3 px-3">Consumable Name</th>
-                    <th className="py-3 px-3">Category</th>
-                    <th className="py-3 px-3">Unit</th>
-                    <th className="py-3 px-3">Current Unit Price (₹)</th>
-                    <th className="py-3 px-3">Yield / Burn Rate</th>
-                    <th className="py-3 px-3 text-right">Action</th>
+                  <tr className="border-b border-industrial-800 bg-industrial-950 text-industrial-400 uppercase text-[10px]">
+                    <th className="py-2.5 px-3">CONSUMABLE ITEM</th>
+                    <th className="py-2.5 px-3">CATEGORY</th>
+                    <th className="py-2.5 px-3">METRIC UNIT</th>
+                    <th className="py-2.5 px-3 text-right">BENCHMARK PRICE (₹)</th>
+                    <th className="py-2.5 px-3">BURN / YIELD BENCHMARK</th>
+                    <th className="py-2.5 px-3 text-right">ACTION</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-industrial-850">
+                <tbody className="divide-y divide-industrial-800/80">
                   {consumablesList.map((c) => (
-                    <tr key={c.id} className="hover:bg-industrial-850/50">
-                      <td className="py-3 px-3 font-medium text-white">{c.name}</td>
-                      <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-industrial-950 border border-industrial-800 text-orange-400">
+                    <tr key={c.id} className="hover:bg-industrial-800/40 transition-colors">
+                      <td className="py-2.5 px-3 font-medium text-white">{c.name}</td>
+                      <td className="py-2.5 px-3">
+                        <span className="px-1.5 py-0.5 text-[9px] font-mono bg-industrial-950 border border-industrial-800 text-forge-400">
                           {c.category}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-industrial-300 font-mono">{c.unit}</td>
-                      <td className="py-3 px-3 font-mono font-bold text-white">₹{c.unit_price}</td>
-                      <td className="py-3 px-3 text-industrial-400 text-[11px]">{c.burn_rate_or_yield || "Standard"}</td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-2.5 px-3 text-industrial-300 font-mono">{c.unit}</td>
+                      <td className="py-2.5 px-3 font-mono font-bold text-white text-right">₹{c.unit_price}</td>
+                      <td className="py-2.5 px-3 text-industrial-400 text-[11px]">{c.burn_rate_or_yield || "Standard"}</td>
+                      <td className="py-2.5 px-3 text-right">
                         <button
                           onClick={() => {
                             const val = prompt(`Enter new unit price (₹) for ${c.name}:`, c.unit_price);
@@ -321,9 +333,9 @@ export default function AdminPanel() {
                               handleUpdateConsumablePrice(c, val);
                             }
                           }}
-                          className="px-2.5 py-1 rounded bg-industrial-800 hover:bg-orange-500 hover:text-white text-orange-400 text-xs font-semibold transition-colors"
+                          className="px-2 py-1 bg-industrial-800 hover:bg-forge-600 hover:text-white text-forge-400 text-[11px] font-mono uppercase transition-colors border border-industrial-700 hover:border-forge-500"
                         >
-                          Update Price
+                          Calibrate
                         </button>
                       </td>
                     </tr>
@@ -336,41 +348,44 @@ export default function AdminPanel() {
 
         {/* Tab 3: Tools Catalog Management */}
         {activeTab === "tools" && (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <div>
-              <h3 className="text-base font-bold text-white">Tool Catalog & Depreciation Settings</h3>
-              <p className="text-xs text-industrial-400">
-                Adjust purchase prices and wear amortization recovery per job.
-              </p>
+          <div className="bg-industrial-900 border border-industrial-800 p-5 space-y-4">
+            <div className="pb-3 border-b border-industrial-800 flex justify-between items-center">
+              <div>
+                <span className="font-mono text-[10px] text-forge-500 uppercase tracking-widest block">REGISTRY // MACHINERY & TOOLS</span>
+                <h3 className="text-xs font-bold font-mono text-white uppercase">Equipment Assets & Job Wear Recovery</h3>
+              </div>
+              <span className="font-mono text-[11px] text-industrial-400 bg-industrial-950 px-2 py-0.5 border border-industrial-800">
+                {toolsList.length} ASSETS REGISTERED
+              </span>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
+              <table className="w-full text-xs text-left font-mono border-collapse">
                 <thead>
-                  <tr className="border-b border-industrial-800 text-industrial-400 font-mono uppercase">
-                    <th className="py-3 px-3">Tool Name</th>
-                    <th className="py-3 px-3">Category</th>
-                    <th className="py-3 px-3">Price Range (₹)</th>
-                    <th className="py-3 px-3">Lifespan</th>
-                    <th className="py-3 px-3">Cost / Job (₹)</th>
-                    <th className="py-3 px-3 text-right">Action</th>
+                  <tr className="border-b border-industrial-800 bg-industrial-950 text-industrial-400 uppercase text-[10px]">
+                    <th className="py-2.5 px-3">EQUIPMENT ASSET</th>
+                    <th className="py-2.5 px-3">CLASS</th>
+                    <th className="py-2.5 px-3">MARKET BAND (₹)</th>
+                    <th className="py-2.5 px-3">LIFESPAN METRIC</th>
+                    <th className="py-2.5 px-3 text-right">WEAR / JOB (₹)</th>
+                    <th className="py-2.5 px-3 text-right">ACTION</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-industrial-850">
+                <tbody className="divide-y divide-industrial-800/80">
                   {toolsList.map((t) => (
-                    <tr key={t.id} className="hover:bg-industrial-850/50">
-                      <td className="py-3 px-3 font-medium text-white">{t.name}</td>
-                      <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-industrial-950 border border-industrial-800 text-blue-400">
+                    <tr key={t.id} className="hover:bg-industrial-800/40 transition-colors">
+                      <td className="py-2.5 px-3 font-medium text-white">{t.name}</td>
+                      <td className="py-2.5 px-3">
+                        <span className="px-1.5 py-0.5 text-[9px] font-mono bg-industrial-950 border border-industrial-800 text-blue-400">
                           {t.category}
                         </span>
                       </td>
-                      <td className="py-3 px-3 font-mono text-white">
+                      <td className="py-2.5 px-3 font-mono text-white">
                         ₹{t.typical_price_min} – ₹{t.typical_price_max}
                       </td>
-                      <td className="py-3 px-3 text-industrial-300 text-[11px]">{t.expected_lifespan}</td>
-                      <td className="py-3 px-3 font-mono font-bold text-orange-400">₹{t.approx_cost_per_job}</td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-2.5 px-3 text-industrial-300 text-[11px]">{t.expected_lifespan}</td>
+                      <td className="py-2.5 px-3 font-mono font-bold text-forge-400 text-right">₹{t.approx_cost_per_job}</td>
+                      <td className="py-2.5 px-3 text-right">
                         <button
                           onClick={() => {
                             const minVal = prompt(`Enter min price for ${t.name}:`, t.typical_price_min);
@@ -379,9 +394,9 @@ export default function AdminPanel() {
                               handleUpdateToolPrice(t, minVal, maxVal);
                             }
                           }}
-                          className="px-2.5 py-1 rounded bg-industrial-800 hover:bg-orange-500 hover:text-white text-orange-400 text-xs font-semibold transition-colors"
+                          className="px-2 py-1 bg-industrial-800 hover:bg-forge-600 hover:text-white text-forge-400 text-[11px] font-mono uppercase transition-colors border border-industrial-700 hover:border-forge-500"
                         >
-                          Edit Pricing
+                          Calibrate
                         </button>
                       </td>
                     </tr>
@@ -394,22 +409,25 @@ export default function AdminPanel() {
 
         {/* Tab 4: Services & Ranges */}
         {activeTab === "services" && (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <div>
-              <h3 className="text-base font-bold text-white">Welding Service Price Ranges</h3>
-              <p className="text-xs text-industrial-400">
-                Manage estimated price boundaries displayed on the Public Service Price Guide.
-              </p>
+          <div className="bg-industrial-900 border border-industrial-800 p-5 space-y-4">
+            <div className="pb-3 border-b border-industrial-800 flex justify-between items-center">
+              <div>
+                <span className="font-mono text-[10px] text-forge-500 uppercase tracking-widest block">REGISTRY // FABRICATION PACKAGES</span>
+                <h3 className="text-xs font-bold font-mono text-white uppercase">Work Package Scope & Estimated Bounds</h3>
+              </div>
+              <span className="font-mono text-[11px] text-industrial-400 bg-industrial-950 px-2 py-0.5 border border-industrial-800">
+                {servicesList.length} PACKAGES
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {servicesList.map((s) => (
-                <div key={s.id} className="bg-industrial-950 border border-industrial-800 rounded-xl p-4 flex items-center justify-between">
-                  <div>
-                    <h4 className="font-bold text-white text-xs sm:text-sm">{s.name}</h4>
-                    <span className="text-[11px] text-industrial-400 block">{s.category} • ~{s.typical_duration_hours} hrs</span>
-                    <span className="text-xs font-mono font-bold text-orange-400 mt-1 block">
-                      Range: ₹{s.min_price} – ₹{s.max_price}
+                <div key={s.id} className="bg-industrial-950 border border-industrial-800 p-3.5 flex items-center justify-between font-mono">
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-white text-xs">{s.name}</h4>
+                    <span className="text-[10px] text-industrial-400 block">{s.category} • ~{s.typical_duration_hours}h work duration</span>
+                    <span className="text-xs font-mono font-bold text-forge-500 block">
+                      RANGE: ₹{s.min_price} – ₹{s.max_price}
                     </span>
                   </div>
                   <button
@@ -422,9 +440,9 @@ export default function AdminPanel() {
                         showMessage(`Updated price range for ${s.name}`);
                       }
                     }}
-                    className="px-3 py-1.5 rounded-lg bg-industrial-850 hover:bg-orange-500 hover:text-white text-orange-400 text-xs font-semibold transition-colors"
+                    className="px-2.5 py-1 bg-industrial-850 hover:bg-forge-600 hover:text-white text-forge-400 text-[11px] font-mono uppercase transition-colors border border-industrial-700 hover:border-forge-500"
                   >
-                    Adjust Range
+                    Adjust Bounds
                   </button>
                 </div>
               ))}
@@ -436,4 +454,3 @@ export default function AdminPanel() {
     </div>
   );
 }
-

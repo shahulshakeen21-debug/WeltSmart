@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import { 
   ChevronDown, 
   ChevronUp, 
-  Info, 
   ShieldCheck, 
-  Zap, 
-  Hammer, 
-  Cpu, 
-  Truck, 
   FileText, 
-  Sparkles,
-  CheckCircle2
+  Info,
+  CheckCircle2,
+  FileSpreadsheet
 } from "lucide-react";
 
 export default function CostBreakdownCard({ data, onSaveQuote, isSaving }) {
@@ -19,117 +15,144 @@ export default function CostBreakdownCard({ data, onSaveQuote, isSaving }) {
   if (!data) return null;
 
   const costItems = [
-    { label: "Material Cost", amount: data.material_cost, key: "material", color: "text-blue-400" },
-    { label: "Electrode / Wire Cost", amount: data.electrode_wire_cost, key: "electrode_wire", color: "text-amber-400" },
-    { label: "Electricity Cost", amount: data.electricity_cost, key: "electricity", color: "text-yellow-400" },
-    { label: "Gas Cost", amount: data.gas_cost, key: "gas", color: "text-cyan-400" },
-    { label: "Grinding / Cutting", amount: data.grinding_cutting_cost, key: "grinding_cutting", color: "text-purple-400" },
-    { label: "Machine Usage & Wear", amount: data.machine_usage_cost, key: "machine_usage", color: "text-indigo-400" },
-    { label: "Labour Cost", amount: data.labour_cost, key: "labour", color: "text-orange-400" },
-    { label: "Transportation", amount: data.transport_cost, key: "transport", color: "text-emerald-400" },
-    { label: "Other Expenses & Safety", amount: data.other_expenses_cost, key: "other_expenses", color: "text-rose-400" },
+    { code: "BOM-01", label: "Base Metal Stock", amount: data.material_cost, desc: "Raw plate, SHS, angle section" },
+    { code: "CON-01", label: "Electrode / Wire Depletion", amount: data.electrode_wire_cost, desc: "Filler rods / wire deposited" },
+    { code: "ENG-01", label: "Electric Arc Power Draw", amount: data.electricity_cost, desc: "Commercial utility tariff" },
+    { code: "GAS-01", label: "Shielding Gas Volume", amount: data.gas_cost, desc: "Compressed Argon / CO2" },
+    { code: "ABR-01", label: "Grinding & Cutting Discs", amount: data.grinding_cutting_cost, desc: "Abrasive wheel erosion" },
+    { code: "CAP-01", label: "Machine Tool Wear & Amortization", amount: data.machine_usage_cost, desc: "Inverter depreciation + annual service" },
+    { code: "LAB-01", label: "Welder Skilled Labour", amount: data.labour_cost, desc: "Prep, fitup, root & cap passes" },
+    { code: "LOG-01", label: "Logistics & Tooling Haulage", amount: data.transport_cost, desc: "Equipment & vehicle carriage" },
+    { code: "OHD-01", label: "Safety PPE & Consumable Buffer", amount: data.other_expenses_cost, desc: "Lenses, gloves, flux, shop buffer" },
   ];
 
   return (
-    <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-      {/* Decorative accent spark */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-bl-full pointer-events-none"></div>
+    <div className="bg-industrial-900 border border-industrial-750 rounded-sm overflow-hidden shadow-panel">
+      
+      {/* Technical Header */}
+      <div className="bg-industrial-850 px-4 py-3 border-b border-industrial-750 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <FileSpreadsheet className="w-4 h-4 text-forge-400" />
+          <div>
+            <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider">
+              Engineering Cost Ledger
+            </h3>
+            <span className="text-[10px] text-industrial-400 font-mono">
+              SPEC-ID: EST-{Math.round(data.recommended_price % 10000)} • ISO 5817
+            </span>
+          </div>
+        </div>
 
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-industrial-800 mb-6">
-        <div>
-          <span className="text-[11px] font-bold text-orange-400 uppercase tracking-widest block">
-            Transparent Cost Engine
-          </span>
-          <h3 className="text-xl font-black text-white tracking-tight">
-            Itemized Cost Breakdown
-          </h3>
-        </div>
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Fair Trade Model</span>
-        </div>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs bg-emerald-950/70 text-emerald-400 border border-emerald-800/80 text-[10px] font-mono font-semibold">
+          <ShieldCheck className="w-3 h-3" />
+          VERIFIED BOM
+        </span>
       </div>
 
       {/* Itemized Table */}
-      <div className="space-y-3 font-mono text-sm mb-6">
-        {costItems.map((item, idx) => (
-          <div key={idx} className="flex items-center justify-between py-1 border-b border-industrial-850">
-            <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${item.color.replace('text-', 'bg-')}`}></span>
-              <span className="text-industrial-300 font-sans text-xs sm:text-sm">{item.label}</span>
-            </div>
-            <span className="font-bold text-white tracking-wide">
-              ₹{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      <div className="p-4 space-y-4">
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs font-mono">
+            <thead>
+              <tr className="border-b border-industrial-800 text-[10px] text-industrial-500 uppercase tracking-wider text-left">
+                <th className="pb-1.5 font-semibold">Code</th>
+                <th className="pb-1.5 font-semibold">Cost Vector</th>
+                <th className="pb-1.5 text-right font-semibold">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-industrial-800/60">
+              {costItems.map((item, idx) => (
+                <tr key={idx} className="hover:bg-industrial-850/40 transition-colors">
+                  <td className="py-2 text-[10px] text-industrial-500 pr-2">
+                    {item.code}
+                  </td>
+                  <td className="py-2">
+                    <div className="text-industrial-200 font-sans font-medium text-xs">
+                      {item.label}
+                    </div>
+                    <div className="text-[10px] text-industrial-500 font-sans">
+                      {item.desc}
+                    </div>
+                  </td>
+                  <td className="py-2 text-right font-bold text-white">
+                    ₹{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Operating Subtotal & Final Margin Reconciliation */}
+        <div className="bg-industrial-950 border border-industrial-800 rounded-sm p-3 font-mono text-xs space-y-2">
+          <div className="flex items-center justify-between text-industrial-400">
+            <span>Direct Operating Cost (Zero Margin):</span>
+            <span className="font-semibold text-industrial-200">
+              ₹{data.total_operating_cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
-        ))}
-      </div>
 
-      {/* Operating Cost Subtotal */}
-      <div className="bg-industrial-950/80 rounded-xl p-4 border border-industrial-800 mb-6 font-mono space-y-2">
-        <div className="flex items-center justify-between text-xs text-industrial-400">
-          <span>Total Operating Cost (Zero Margin):</span>
-          <span className="font-bold text-industrial-200">
-            ₹{data.total_operating_cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </span>
-        </div>
-        <div className="flex items-center justify-between text-xs text-teal-400">
-          <span>Reasonable Service / Profit Margin:</span>
-          <span className="font-bold">
-            + ₹{data.profit_margin_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </span>
-        </div>
-        <div className="pt-2 border-t border-industrial-800 flex items-center justify-between text-base font-sans">
-          <span className="font-extrabold text-white">Recommended Customer Price:</span>
-          <span className="text-2xl font-black text-orange-400 font-mono">
-            ₹{data.recommended_price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-          </span>
-        </div>
-      </div>
-
-      {/* Save as Official Quotation Button */}
-      {onSaveQuote && (
-        <button
-          onClick={onSaveQuote}
-          disabled={isSaving}
-          className="w-full py-3 mb-4 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold text-sm tracking-wide shadow-weld-glow transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-        >
-          <FileText className="w-4 h-4" />
-          <span>{isSaving ? "Generating Official Quote..." : "Generate & Save Official Quotation"}</span>
-        </button>
-      )}
-
-      {/* Collapsible Mathematical Formula Inspector */}
-      <div className="pt-2 border-t border-industrial-800">
-        <button
-          onClick={() => setShowFormulas(!showFormulas)}
-          className="w-full flex items-center justify-between text-xs font-semibold text-industrial-400 hover:text-orange-400 transition-colors py-2"
-        >
-          <span className="flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5" />
-            <span>How were these numbers calculated? (Formula Inspector)</span>
-          </span>
-          {showFormulas ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-
-        {showFormulas && data.explanations && (
-          <div className="mt-3 space-y-2 p-3 bg-industrial-950 rounded-xl border border-industrial-800 text-[11px] text-industrial-300">
-            {Object.entries(data.explanations).map(([key, explanation], idx) => (
-              <div key={idx} className="flex items-start gap-2">
-                <span className="text-orange-400 font-bold uppercase shrink-0 font-mono">[{key}]:</span>
-                <span className="leading-relaxed">{explanation}</span>
-              </div>
-            ))}
+          <div className="flex items-center justify-between text-emerald-400">
+            <span>Trade Service / Operating Margin:</span>
+            <span className="font-semibold">
+              + ₹{data.profit_margin_amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
           </div>
+
+          <div className="pt-2 border-t border-industrial-800 flex items-center justify-between text-sm font-sans">
+            <div>
+              <span className="font-bold text-white block text-xs">RECOMMENDED INVOICE PRICE:</span>
+              <span className="text-[10px] text-industrial-500 font-mono">Tax / Site Contingencies Not Included</span>
+            </div>
+            <span className="text-xl font-bold text-forge-400 font-mono tracking-tight">
+              ₹{Math.round(data.recommended_price).toLocaleString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        {onSaveQuote && (
+          <button
+            onClick={onSaveQuote}
+            disabled={isSaving}
+            className="w-full py-2.5 rounded-sm bg-forge-600 hover:bg-forge-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>{isSaving ? "GENERATING QUOTE SHEET..." : "CREATE FORMAL QUOTATION"}</span>
+          </button>
         )}
+
+        {/* Expandable Mathematical Formula Inspector */}
+        <div className="border-t border-industrial-800 pt-3">
+          <button
+            onClick={() => setShowFormulas(!showFormulas)}
+            className="w-full flex items-center justify-between text-[11px] font-mono text-industrial-400 hover:text-industrial-200 transition-colors"
+          >
+            <span className="flex items-center gap-1.5">
+              <Info className="w-3.5 h-3.5 text-industrial-500" />
+              <span>Inspection of Mathematical Models</span>
+            </span>
+            {showFormulas ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+
+          {showFormulas && data.explanations && (
+            <div className="mt-2.5 p-3 bg-industrial-950 rounded-sm border border-industrial-800 space-y-1.5 text-[10px] font-mono text-industrial-300">
+              {Object.entries(data.explanations).map(([key, explanation], idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <span className="text-forge-400 font-bold uppercase shrink-0">[{key}]:</span>
+                  <span className="leading-relaxed text-industrial-400">{explanation}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Standard Disclaimer Notice */}
+        <div className="text-[10px] text-industrial-500 leading-normal font-sans border-t border-industrial-800/80 pt-2">
+          * {data.disclaimer}
+        </div>
       </div>
 
-      {/* Disclaimer statement */}
-      <div className="mt-4 text-[10px] text-industrial-500 leading-normal italic">
-        * {data.disclaimer}
-      </div>
     </div>
   );
 }
-

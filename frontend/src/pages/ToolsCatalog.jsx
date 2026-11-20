@@ -3,16 +3,10 @@ import { api } from "../services/api";
 import { 
   Wrench, 
   Search, 
-  Filter, 
-  Info, 
-  ShieldCheck, 
-  Clock, 
-  Zap, 
-  CheckCircle2, 
   ExternalLink,
-  Sparkles,
-  HelpCircle,
-  AlertCircle
+  ShieldAlert,
+  Sliders,
+  Cpu
 } from "lucide-react";
 
 export default function ToolsCatalog() {
@@ -54,54 +48,54 @@ export default function ToolsCatalog() {
   }, [search, selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-industrial-950 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-industrial-950 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Wrench className="w-3.5 h-3.5" />
-            Equipment & Tooling Directory
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-industrial-800">
+          <div>
+            <div className="flex items-center gap-2 mb-1 text-[10px] font-mono font-bold text-forge-400 uppercase">
+              <span className="w-2 h-2 bg-forge-500 rounded-xs"></span>
+              <span>EQUIPMENT INVENTORY // ASSET AMORTIZATION DIRECTORY</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Welding Equipment & Tooling Database
+            </h1>
+            <p className="mt-1 text-xs text-industrial-400 max-w-2xl leading-relaxed">
+              Technical breakdown of power sources, abrasive consumables, and personal safety gear. Each entry documents purchase capital, service lifespan, and exact cost contribution per job.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Welding Tools & Equipment Catalog
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-industrial-300">
-            Explore the specialized industrial machinery, abrasive consumables, and life-critical protective gear that enable modern welding — and see why each contributes to every job invoice.
-          </p>
 
-          <div className="mt-4 p-3 bg-industrial-900 border border-orange-500/30 rounded-xl inline-flex items-center gap-2 text-xs text-orange-300 text-left">
-            <AlertCircle className="w-4 h-4 text-orange-400 shrink-0" />
-            <span>
-              <strong>Market Estimate Notice:</strong> Tool prices represent current Indian industrial market benchmarks and vary by brand, rating (Amps), and local dealer availability.
-            </span>
+          <div className="p-3 bg-industrial-900 border border-industrial-750 rounded-sm text-[11px] font-mono text-industrial-400 max-w-xs">
+            <span className="text-forge-400 font-bold block mb-0.5">BENCHMARK NOTICE:</span>
+            Rates represent current Indian market indices. Actual equipment costs vary by duty rating (Amps), duty cycle, and manufacturer.
           </div>
         </div>
 
-        {/* Search & Category Filter Bar */}
-        <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-4 sm:p-5 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+        {/* Search & Filter Bar */}
+        <div className="bg-industrial-900 border border-industrial-750 rounded-sm p-3 flex flex-col md:flex-row items-center justify-between gap-3 shadow-panel">
           {/* Search Input */}
-          <div className="relative w-full md:w-96">
-            <Search className="w-4 h-4 text-industrial-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <div className="relative w-full md:w-80">
+            <Search className="w-3.5 h-3.5 text-industrial-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search tools, purpose, or wear explanation..."
+              placeholder="Search tools, purpose, wear formula..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-industrial-950 border border-industrial-700 focus:border-orange-500 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white placeholder-industrial-500 outline-none transition-colors"
+              className="w-full bg-industrial-950 border border-industrial-750 focus:border-forge-500 rounded-xs pl-9 pr-3 py-1.5 text-xs font-mono text-white placeholder-industrial-500 outline-none"
             />
           </div>
 
           {/* Category Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-1 w-full md:w-auto font-mono text-xs">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`px-2.5 py-1 rounded-xs transition-colors ${
                   selectedCategory === cat
-                    ? "bg-orange-500 text-white shadow-weld-glow"
-                    : "bg-industrial-950 text-industrial-400 hover:text-white border border-industrial-800 hover:border-industrial-700"
+                    ? "bg-industrial-800 text-white border border-industrial-600 font-bold"
+                    : "bg-industrial-950 text-industrial-400 hover:text-white border border-industrial-800"
                 }`}
               >
                 {cat}
@@ -110,87 +104,85 @@ export default function ToolsCatalog() {
           </div>
         </div>
 
-        {/* Tools Grid */}
+        {/* Tools Datasheet Grid */}
         {loading ? (
           <div className="py-20 flex justify-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-500"></div>
+            <div className="animate-spin rounded-xs h-8 w-8 border-t-2 border-b-2 border-forge-500"></div>
           </div>
         ) : tools.length === 0 ? (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-2xl p-12 text-center text-industrial-400">
-            <Wrench className="w-10 h-10 mx-auto text-industrial-600 mb-3" />
-            <h3 className="text-base font-bold text-white mb-1">No Tools Found</h3>
-            <p className="text-xs">Try adjusting your search terms or category filter.</p>
+          <div className="bg-industrial-900 border border-industrial-800 rounded-sm p-12 text-center text-industrial-400 font-mono text-xs">
+            <Wrench className="w-8 h-8 mx-auto text-industrial-600 mb-2" />
+            <div className="text-white font-bold">No Matching Equipment Found</div>
+            <div className="text-industrial-500 mt-1">Try broadening search terms or resetting category filters.</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {tools.map((tool) => (
               <div
                 key={tool.id}
-                className="bg-industrial-900 border border-industrial-800 hover:border-orange-500/40 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 group shadow-lg"
+                className="bg-industrial-900 border border-industrial-750 hover:border-industrial-600 rounded-sm overflow-hidden flex flex-col justify-between transition-colors shadow-panel"
               >
                 <div>
-                  {/* Tool Image with category badge */}
-                  <div className="relative h-44 w-full bg-industrial-950 overflow-hidden">
+                  {/* Tool Image with technical spec tags */}
+                  <div className="relative h-40 w-full bg-industrial-950 overflow-hidden border-b border-industrial-800">
                     <img
                       src={tool.image_url || "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80"}
                       alt={tool.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
+                      className="w-full h-full object-cover opacity-75 hover:opacity-90 transition-opacity"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-industrial-900 via-transparent to-transparent"></div>
-                    <span className="absolute top-3 left-3 bg-industrial-950/90 backdrop-blur-md text-orange-400 border border-orange-500/30 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                    <div className="absolute top-2 left-2 bg-industrial-950/90 border border-industrial-750 text-forge-400 font-mono text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-xs">
                       {tool.category}
-                    </span>
-                    <span className="absolute bottom-3 right-3 bg-industrial-950/90 text-white font-mono text-xs font-bold px-2 py-0.5 rounded border border-industrial-800">
+                    </div>
+                    <div className="absolute bottom-2 right-2 bg-industrial-950/90 border border-industrial-750 text-white font-mono text-[11px] font-bold px-2 py-0.5 rounded-xs">
                       ₹{tool.typical_price_min.toLocaleString()} – ₹{tool.typical_price_max.toLocaleString()}
-                    </span>
+                    </div>
                   </div>
 
                   {/* Body Content */}
-                  <div className="p-5 space-y-3">
-                    <h3 className="text-base font-bold text-white group-hover:text-orange-400 transition-colors">
+                  <div className="p-4 space-y-3">
+                    <h3 className="text-sm font-bold text-white tracking-tight">
                       {tool.name}
                     </h3>
-                    
-                    <p className="text-xs text-industrial-300 leading-relaxed line-clamp-2">
+
+                    <p className="text-xs text-industrial-400 leading-relaxed line-clamp-2">
                       {tool.purpose}
                     </p>
 
-                    {/* Lifespan & Wear Stats */}
-                    <div className="bg-industrial-950 rounded-xl p-3 border border-industrial-800 text-[11px] font-mono grid grid-cols-2 gap-2">
+                    {/* Technical Lifespan Box */}
+                    <div className="bg-industrial-950 border border-industrial-800 rounded-xs p-2.5 font-mono text-[10px] grid grid-cols-2 gap-2">
                       <div>
-                        <span className="text-industrial-500 block text-[10px]">Expected Life</span>
+                        <span className="text-industrial-500 block uppercase">Lifespan Cycle</span>
                         <span className="text-industrial-200 font-semibold">{tool.expected_lifespan}</span>
                       </div>
                       <div>
-                        <span className="text-industrial-500 block text-[10px]">Wear Contribution</span>
-                        <span className="text-orange-400 font-bold">~₹{tool.approx_cost_per_job} / job</span>
+                        <span className="text-industrial-500 block uppercase">Amortization / Job</span>
+                        <span className="text-forge-400 font-bold">~₹{tool.approx_cost_per_job}</span>
                       </div>
                     </div>
 
-                    {/* Why It Matters / Transparency Education */}
-                    <div className="pt-2">
-                      <div className="text-[11px] font-bold text-industrial-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Why It Contributes to Charges:</span>
-                      </div>
-                      <p className="text-xs text-industrial-400 leading-relaxed">
+                    {/* Why It Contributes */}
+                    <div className="text-[11px] space-y-1">
+                      <span className="font-mono text-[10px] font-bold text-industrial-500 uppercase block">
+                        Cost Contribution Vector:
+                      </span>
+                      <p className="text-industrial-300 leading-relaxed text-xs">
                         {tool.why_it_matters}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Card Footer Action */}
-                <div className="p-4 bg-industrial-950/60 border-t border-industrial-800/80 flex items-center justify-between">
-                  <span className="text-[10px] text-industrial-500 font-mono">
-                    Depreciation: {tool.depreciation_formula ? "Calculated" : "Standard"}
+                {/* Footer Action */}
+                <div className="p-3 bg-industrial-950 border-t border-industrial-800 flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-industrial-500">
+                    Depreciation: Active
                   </span>
                   <button
                     onClick={() => setActiveModalTool(tool)}
-                    className="text-xs font-semibold text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1"
+                    className="text-forge-400 hover:text-forge-300 font-semibold flex items-center gap-1 transition-colors uppercase"
                   >
-                    <span>View Breakdown</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>View Datasheet</span>
+                    <ExternalLink className="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -198,65 +190,65 @@ export default function ToolsCatalog() {
           </div>
         )}
 
-        {/* Modal for Deep Tool Breakdown */}
+        {/* Technical Datasheet Modal */}
         {activeModalTool && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-industrial-900 border border-industrial-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
+            <div className="bg-industrial-900 border border-industrial-700 rounded-sm max-w-lg w-full p-5 shadow-2xl relative space-y-4 font-mono text-xs">
               <button
                 onClick={() => setActiveModalTool(null)}
-                className="absolute top-4 right-4 text-industrial-400 hover:text-white p-1 rounded-lg"
+                className="absolute top-4 right-4 text-industrial-400 hover:text-white p-1"
               >
                 ✕
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded bg-orange-500/20 text-orange-400 text-xs font-bold">
+                <span className="px-2 py-0.5 rounded-xs bg-industrial-800 text-forge-400 text-[10px] font-bold uppercase">
                   {activeModalTool.category}
                 </span>
-                <span className="text-xs text-industrial-400">Tool Transparency Sheet</span>
+                <span className="text-[10px] text-industrial-500 uppercase">DATASHEET INSPECTION</span>
               </div>
 
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-base font-bold text-white font-sans">
                 {activeModalTool.name}
               </h2>
 
-              <p className="text-xs text-industrial-300 leading-relaxed">
+              <p className="text-xs text-industrial-300 leading-relaxed font-sans">
                 {activeModalTool.purpose}
               </p>
 
-              <div className="space-y-2 p-3 bg-industrial-950 rounded-xl border border-industrial-800 text-xs font-mono">
+              <div className="space-y-1.5 p-3 bg-industrial-950 rounded-xs border border-industrial-800 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-industrial-400">Typical Purchase Cost:</span>
+                  <span className="text-industrial-500">Market Capital Cost:</span>
                   <span className="text-white font-bold">₹{activeModalTool.typical_price_min} – ₹{activeModalTool.typical_price_max}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-industrial-400">Annual Maintenance:</span>
+                  <span className="text-industrial-500">Annual Servicing Overhead:</span>
                   <span className="text-white">₹{activeModalTool.maintenance_cost_annual} / yr</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-industrial-400">Expected Working Life:</span>
+                  <span className="text-industrial-500">Rated Operating Life:</span>
                   <span className="text-white">{activeModalTool.expected_lifespan}</span>
                 </div>
-                <div className="flex justify-between pt-1 border-t border-industrial-850 text-orange-400">
-                  <span>Job Wear & Tear Recovery:</span>
-                  <span className="font-bold">₹{activeModalTool.approx_cost_per_job} per job</span>
+                <div className="flex justify-between pt-1.5 border-t border-industrial-800 text-forge-400">
+                  <span>Job Depreciation Recovery:</span>
+                  <span className="font-bold">₹{activeModalTool.approx_cost_per_job} / job</span>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-1">
-                  Why this must be factored in welding charges:
-                </h4>
-                <p className="text-xs text-industrial-300 leading-relaxed bg-industrial-850 p-3 rounded-lg border border-industrial-800">
+                <span className="text-[10px] font-bold text-industrial-500 uppercase tracking-wider block mb-1">
+                  Why this must be factored into job invoices:
+                </span>
+                <p className="text-xs text-industrial-300 leading-relaxed bg-industrial-950 p-2.5 rounded-xs border border-industrial-800 font-sans">
                   {activeModalTool.why_it_matters}
                 </p>
               </div>
 
               <button
                 onClick={() => setActiveModalTool(null)}
-                className="w-full py-2.5 rounded-xl bg-industrial-800 hover:bg-industrial-700 text-white font-semibold text-xs tracking-wide"
+                className="w-full py-2 rounded-xs bg-industrial-800 hover:bg-industrial-750 text-white font-mono font-semibold text-xs tracking-wider uppercase transition-colors"
               >
-                Close Inspector
+                Close Datasheet
               </button>
             </div>
           </div>
@@ -266,4 +258,3 @@ export default function ToolsCatalog() {
     </div>
   );
 }
-
