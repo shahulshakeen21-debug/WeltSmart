@@ -1,0 +1,730 @@
+from sqlalchemy.orm import Session
+from app.models.user import User
+from app.models.welder_profile import WelderProfile
+from app.models.tool import Tool
+from app.models.consumable import Consumable
+from app.models.service import Service
+from app.models.setting import Setting
+from app.models.quote import Quote
+from app.services.auth import hash_password
+import datetime
+
+def seed_database(db: Session):
+    # 1. Seed Users
+    if not db.query(User).filter(User.email == "admin@weldcost.com").first():
+        admin = User(
+            email="admin@weldcost.com",
+            hashed_password=hash_password("admin123"),
+            full_name="System Administrator",
+            role="admin",
+            phone="+91 98765 00001",
+            workshop_name="WeldCost Central Authority"
+        )
+        db.add(admin)
+
+    welder_user = db.query(User).filter(User.email == "welder@weldcost.com").first()
+    if not welder_user:
+        welder_user = User(
+            email="welder@weldcost.com",
+            hashed_password=hash_password("welder123"),
+            full_name="Rajesh Sharma (Master Welder)",
+            role="welder",
+            phone="+91 98220 12345",
+            workshop_name="Sharma Precision Fabrication & Engineering"
+        )
+        db.add(welder_user)
+        db.commit()
+        db.refresh(welder_user)
+
+        # Seed Welder Profile
+        welder_profile = WelderProfile(
+            user_id=welder_user.id,
+            machine_name="250A IGBT Dual Inverter ARC/MIG",
+            machine_purchase_cost=28500.0,
+            machine_lifespan_hours=4500.0,
+            maintenance_cost_annual=3500.0,
+            default_power_rating_kw=4.8,
+            electricity_rate_kwh=9.5,
+            hourly_labour_rate=320.0,
+            helper_labour_rate=160.0,
+            transport_cost_per_km=18.0,
+            target_profit_margin_pct=25.0,
+            workshop_address="Plot 44, MIDC Industrial Area, Andheri East, Mumbai",
+            city="Mumbai",
+            experience_years=12,
+            certifications="AWS D1.1 Certified, Boiler Grade Class-1 Welder"
+        )
+        db.add(welder_profile)
+
+    if not db.query(User).filter(User.email == "customer@weldcost.com").first():
+        customer = User(
+            email="customer@weldcost.com",
+            hashed_password=hash_password("customer123"),
+            full_name="Amit Patel",
+            role="customer",
+            phone="+91 99887 66554",
+            workshop_name="Patel Commercial Residences"
+        )
+        db.add(customer)
+
+    # 2. Seed Tools
+    if db.query(Tool).count() == 0:
+        tools_data = [
+            {
+                "name": "Welding Inverter Machine (IGBT 200A-250A)",
+                "slug": "welding-inverter-machine",
+                "category": "Machines",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Converts high-voltage AC mains into a controllable, stable DC welding arc capable of melting heavy steel joints.",
+                "typical_price_min": 18000.0,
+                "typical_price_max": 42000.0,
+                "expected_lifespan": "3–5 Years (4,000–6,000 hours)",
+                "maintenance_cost_annual": 3500.0,
+                "approx_cost_per_job": 80.0,
+                "why_it_matters": "The machine degrades through thermal cycling, dust contamination, fan wear, and capacitor aging with every hour of arc time. Without recovering machine depreciation, the welder cannot replace the machine when it eventually burns out.",
+            },
+            {
+                "name": "Auto-Darkening Welding Helmet",
+                "slug": "auto-darkening-helmet",
+                "category": "Safety",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Shields the welder's retinas, cornea, and facial skin from intense UV/IR radiation and blinding arc flash that causes permanent ocular damage.",
+                "typical_price_min": 2500.0,
+                "typical_price_max": 9500.0,
+                "expected_lifespan": "2 Years (liquid crystal sensors & optical filters wear)",
+                "maintenance_cost_annual": 800.0,
+                "approx_cost_per_job": 30.0,
+                "why_it_matters": "Welding arc temperature exceeds 3,000°C and radiates dangerous UV wavelengths. The protective optical filters and spatter lenses must be replaced regularly to keep the artisan safe from arc-eye burns.",
+            },
+            {
+                "name": "Heavy-Duty Split Cowhide Leather Welding Gloves",
+                "slug": "welding-gloves",
+                "category": "Safety",
+                "image_url": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Protects hands and forearms against molten metal sparks, slag burns, sharp steel burrs, and extreme radiant heat.",
+                "typical_price_min": 350.0,
+                "typical_price_max": 1200.0,
+                "expected_lifespan": "3–6 Weeks per active pair under heavy daily use",
+                "maintenance_cost_annual": 4800.0,
+                "approx_cost_per_job": 25.0,
+                "why_it_matters": "Gloves stiffen, scorch, and tear rapidly when handling hot fabricated parts. They are a continuously consumed operating expense.",
+            },
+            {
+                "name": "Welding Electrodes (E6013 & E7018 Rutile/Low-Hydrogen)",
+                "slug": "welding-electrodes",
+                "category": "Consumables",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Conducts electrical current to sustain the arc while depositing core filler metal to permanently fuse the steel members together.",
+                "typical_price_min": 180.0,
+                "typical_price_max": 380.0,
+                "expected_lifespan": "Consumable (burned within 60–90 seconds per rod)",
+                "maintenance_cost_annual": 0.0,
+                "approx_cost_per_job": 75.0,
+                "why_it_matters": "Welding rods are directly consumed materials that become part of the customer's structure. High quality moisture-free rods are essential for structural integrity.",
+            },
+            {
+                "name": "Pure Copper Flexible Welding Cables (35mm²–50mm²)",
+                "slug": "welding-cables",
+                "category": "Accessories",
+                "image_url": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Carries high amperage current (up to 300A) from the power source to the electrode holder and return ground clamp with low voltage drop.",
+                "typical_price_min": 3500.0,
+                "typical_price_max": 7500.0,
+                "expected_lifespan": "18–24 Months (sheath degrades from abrasion and hot slag)",
+                "maintenance_cost_annual": 1200.0,
+                "approx_cost_per_job": 20.0,
+                "why_it_matters": "Heavy industrial cables are dragged across rough concrete and hot steel daily. Copper cable wear and lug replacement are recurring operational costs.",
+            },
+            {
+                "name": "High-Amperage Brass Electrode Holder (600A)",
+                "slug": "electrode-holder",
+                "category": "Accessories",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Firmly grips the electrode rod at multiple angles while providing insulated electrical safety to the welder's hand.",
+                "typical_price_min": 450.0,
+                "typical_price_max": 1400.0,
+                "expected_lifespan": "6–12 Months",
+                "maintenance_cost_annual": 600.0,
+                "approx_cost_per_job": 15.0,
+                "why_it_matters": "Internal copper jaws oxidise and weaken springs loosen under repeated high-heat arcing, causing resistance and dangerous heat buildup.",
+            },
+            {
+                "name": "Heavy-Duty Magnetic / Brass Earth Clamp (500A)",
+                "slug": "earth-clamp",
+                "category": "Accessories",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Completes the high-current electrical circuit from the workpiece back to the welding inverter.",
+                "typical_price_min": 350.0,
+                "typical_price_max": 1100.0,
+                "expected_lifespan": "1 Year",
+                "maintenance_cost_annual": 300.0,
+                "approx_cost_per_job": 10.0,
+                "why_it_matters": "Poor earthing ruins weld quality and causes severe arc wandering, wasted electricity, and burnt cable terminals.",
+            },
+            {
+                "name": "Heavy Industrial Angle Grinder (850W–1200W)",
+                "slug": "angle-grinder",
+                "category": "Cutting/Grinding",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Prepares joint bevels, slices steel sections, strips rust/paint, cleans slag, and grinds welds flat and smooth.",
+                "typical_price_min": 2800.0,
+                "typical_price_max": 7500.0,
+                "expected_lifespan": "1–2 Years under heavy workshop grit and dust",
+                "maintenance_cost_annual": 1200.0,
+                "approx_cost_per_job": 35.0,
+                "why_it_matters": "Angle grinders suffer immense carbon brush wear, armature dust ingress, and gear wear. Grinding is 40% of the labour in any clean welding job.",
+            },
+            {
+                "name": "Resinoid Reinforced Cutting Wheels (4-inch / 14-inch)",
+                "slug": "cutting-wheel",
+                "category": "Cutting/Grinding",
+                "image_url": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Slices steel pipes, angles, square hollow sections, and sheets rapidly to precise joint dimensions.",
+                "typical_price_min": 25.0,
+                "typical_price_max": 120.0,
+                "expected_lifespan": "Consumable (shrinks and wears to stub within 15–30 cuts)",
+                "maintenance_cost_annual": 0.0,
+                "approx_cost_per_job": 40.0,
+                "why_it_matters": "Every cut into raw steel consumes abrasive disc diameter. Welder must buy new wheels constantly for every single fabrication project.",
+            },
+            {
+                "name": "Depressed Center Grinding Wheels (4-inch 6mm)",
+                "slug": "grinding-wheel",
+                "category": "Cutting/Grinding",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Heavy weld bead shaping, spatter removal, root pass cleanout, and metal beveling.",
+                "typical_price_min": 45.0,
+                "typical_price_max": 150.0,
+                "expected_lifespan": "Consumable (erodes into abrasive dust within 2–3 hours)",
+                "maintenance_cost_annual": 0.0,
+                "approx_cost_per_job": 55.0,
+                "why_it_matters": "A smooth, aesthetic, flush weld requires removing high spots with grinding discs that wear down rapidly.",
+            },
+            {
+                "name": "MIG Solid Wire Spool (ER70S-6 0.8mm/1.2mm)",
+                "slug": "welding-wire",
+                "category": "Consumables",
+                "image_url": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Continuous automatic wire spool feeding high-efficiency, clean weld beads for gates, furniture, and sheet metal fabrication.",
+                "typical_price_min": 2200.0,
+                "typical_price_max": 3800.0,
+                "expected_lifespan": "Consumable (15kg spool used over several jobs)",
+                "maintenance_cost_annual": 0.0,
+                "approx_cost_per_job": 90.0,
+                "why_it_matters": "Copper-coated wire is priced per kilogram and accounts for a direct fraction of structural weld mass.",
+            },
+            {
+                "name": "Industrial Gas Cylinder (Argon / CO2 47L Water Capacity)",
+                "slug": "gas-cylinder",
+                "category": "Gas Equipment",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Stores high-pressure compressed shielding gas (150–200 bar) necessary to blanket the molten weld pool against atmospheric oxygen and nitrogen porosity.",
+                "typical_price_min": 14000.0,
+                "typical_price_max": 24000.0,
+                "expected_lifespan": "10+ Years with mandatory hydrostatic testing every 5 years",
+                "maintenance_cost_annual": 2000.0,
+                "approx_cost_per_job": 60.0,
+                "why_it_matters": "High initial cylinder security deposit plus recurring refill logistics and safety testing expenses.",
+            },
+            {
+                "name": "Two-Stage Gas Flowmeter & Regulator",
+                "slug": "gas-regulator",
+                "category": "Gas Equipment",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Steps down cylinder pressure from 150 bar to a safe, steady flow rate (10–15 LPM) for torch shielding.",
+                "typical_price_min": 1800.0,
+                "typical_price_max": 4800.0,
+                "expected_lifespan": "3 Years",
+                "maintenance_cost_annual": 600.0,
+                "approx_cost_per_job": 15.0,
+                "why_it_matters": "Diaphragms and calibrated glass flow gauges fail if mishandled or clogged by dust, leading to shielding leaks.",
+            },
+            {
+                "name": "MIG/TIG Ergonomic Welding Torch & Lead (4 Meter)",
+                "slug": "welding-torch",
+                "category": "Machines",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Directs electrical power, filler wire, and shielding gas precisely into the weld joint with finger-trigger control.",
+                "typical_price_min": 2400.0,
+                "typical_price_max": 6500.0,
+                "expected_lifespan": "1 Year (contact tips and gas nozzles replaced weekly)",
+                "maintenance_cost_annual": 1500.0,
+                "approx_cost_per_job": 30.0,
+                "why_it_matters": "Torch nozzles collect spatter and contact tips erode oval-shaped within days, needing regular replacement.",
+            },
+            {
+                "name": "Steel-Toe Heat-Resistant Safety Boots (ISI Marked)",
+                "slug": "safety-shoes",
+                "category": "Safety",
+                "image_url": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Protects feet against falling heavy steel sections, hot molten slag droppings, and electrical earth shocks.",
+                "typical_price_min": 1400.0,
+                "typical_price_max": 3500.0,
+                "expected_lifespan": "1 Year under aggressive workshop chemical & slag conditions",
+                "maintenance_cost_annual": 0.0,
+                "approx_cost_per_job": 12.0,
+                "why_it_matters": "Mandatory personal protective equipment preventing catastrophic injuries on fabrication floors.",
+            },
+            {
+                "name": "Split Leather Protective Welding Apron & Sleeves",
+                "slug": "protective-apron",
+                "category": "Safety",
+                "image_url": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Shields torso, chest, and arms from burning pinhole sparks, flame spatter, and radiant heat.",
+                "typical_price_min": 650.0,
+                "typical_price_max": 1800.0,
+                "expected_lifespan": "8–14 Months",
+                "maintenance_cost_annual": 200.0,
+                "approx_cost_per_job": 10.0,
+                "why_it_matters": "Ordinary cotton or synthetic clothing instantly catches fire or melts onto the skin from welding spatter.",
+            },
+            {
+                "name": "Precision Measuring Tools (Steel Tape, Tri-Square, Bevel Gauge)",
+                "slug": "measuring-tools",
+                "category": "Accessories",
+                "image_url": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Ensures true 90-degree square corners, level alignment, and mm-precision fit before tack-welding.",
+                "typical_price_min": 850.0,
+                "typical_price_max": 2500.0,
+                "expected_lifespan": "2 Years",
+                "maintenance_cost_annual": 400.0,
+                "approx_cost_per_job": 8.0,
+                "why_it_matters": "A millimeter out of square across a 10-foot gate causes it to jam or sag forever. Precision alignment takes considerable time.",
+            },
+            {
+                "name": "Heavy Forged Steel F-Clamps & Magnetic Corner Squares (Set of 6)",
+                "slug": "welding-clamps",
+                "category": "Accessories",
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Locks steel members rigidly in place under high clamping force to prevent heat distortion and weld shrinkage warping.",
+                "typical_price_min": 2400.0,
+                "typical_price_max": 6500.0,
+                "expected_lifespan": "3–5 Years",
+                "maintenance_cost_annual": 500.0,
+                "approx_cost_per_job": 20.0,
+                "why_it_matters": "When steel welds cool, they contract with thousands of pounds of force. Without heavy clamping, gates and grills warp out of shape.",
+            },
+            {
+                "name": "Heavy Cast-Iron / Steel Ground Welding Table (10mm Platen)",
+                "slug": "welding-table",
+                "category": "Equipment",
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80",
+                "purpose": "Provides a dead-flat, conductive reference surface to fixture, clamp, and assemble square structural frameworks.",
+                "typical_price_min": 15000.0,
+                "typical_price_max": 55000.0,
+                "expected_lifespan": "10+ Years",
+                "maintenance_cost_annual": 1000.0,
+                "approx_cost_per_job": 30.0,
+                "why_it_matters": "A flat workpiece cannot be built on an uneven dirt or cracked concrete floor. Workshop floor infrastructure represents major capital investment.",
+            }
+        ]
+        for t in tools_data:
+            db.add(Tool(**t))
+
+    # 3. Seed Consumables
+    if db.query(Consumable).count() == 0:
+        consumables_data = [
+            {"name": "E6013 Rutile Electrode (3.15mm / 10 Gauge)", "category": "Electrode", "unit": "piece", "unit_price": 12.0, "description": "Standard general-purpose mild steel electrode for gates, grills, and sheet repairs.", "burn_rate_or_yield": "~65 seconds arc time per rod"},
+            {"name": "E7018 Low-Hydrogen Electrode (3.15mm)", "category": "Electrode", "unit": "piece", "unit_price": 18.0, "description": "High-strength structural electrode for heavy I-beams, load-bearing pillars, and pressure joints.", "burn_rate_or_yield": "Requires dry electrode oven holding"},
+            {"name": "SS 308L Stainless Steel Electrode (2.5mm)", "category": "Electrode", "unit": "piece", "unit_price": 38.0, "description": "Corrosion-resistant rod for food processing, architectural railings, and SS tanks.", "burn_rate_or_yield": "~50 seconds arc time per rod"},
+            {"name": "MIG Wire ER70S-6 (0.8mm Copper Coated)", "category": "Wire", "unit": "kg", "unit_price": 185.0, "description": "High-speed continuous wire for clean, spatter-free joints in tubular furniture and sheet metal.", "burn_rate_or_yield": "~92% deposition efficiency"},
+            {"name": "Argon Shielding Gas (Ultra Pure 99.99%)", "category": "Gas", "unit": "liter", "unit_price": 2.2, "description": "Inert gas shield essential for TIG welding aluminum and stainless steel joints.", "burn_rate_or_yield": "Consumes 10-14 Litres per minute"},
+            {"name": "Industrial Carbon Dioxide (CO2) Shielding Gas", "category": "Gas", "unit": "kg", "unit_price": 45.0, "description": "Deep-penetration shielding gas for heavy mild steel MIG welding.", "burn_rate_or_yield": "Consumes 12-16 Litres per minute"},
+            {"name": "Resinoid 4-inch Thin Cutting Disc (1.0mm)", "category": "Discs", "unit": "piece", "unit_price": 35.0, "description": "High-speed abrasive wheel for clean square tube and angle cutting.", "burn_rate_or_yield": "Averages 18-25 cuts into 1.6mm MS pipe"},
+            {"name": "Depressed Center 4-inch Grinding Wheel (6mm)", "category": "Discs", "unit": "piece", "unit_price": 55.0, "description": "Thick fiber-reinforced wheel for weld bead dressing and edge beveling.", "burn_rate_or_yield": "Averages 3-4 hours of active grinding"},
+            {"name": "Flap Sanding Disc (80 Grit Zirconia)", "category": "Discs", "unit": "piece", "unit_price": 75.0, "description": "For mirror-like smooth weld finishing prior to primer and powder coating.", "burn_rate_or_yield": "Averages 2-3 gate finishing jobs"},
+            {"name": "Silicone Anti-Spatter Aerosol Spray (500ml)", "category": "Chemical", "unit": "piece", "unit_price": 280.0, "description": "Prevents hot weld droplets from sticking to workpiece and torch nozzle.", "burn_rate_or_yield": "Sufficient for 10-15 standard fabrication jobs"},
+        ]
+        for c in consumables_data:
+            db.add(Consumable(**c))
+
+    # 4. Seed Services
+    if db.query(Service).count() == 0:
+        services_data = [
+            {
+                "name": "Gate Welding & Main Entrance Fabrication",
+                "slug": "gate-welding",
+                "category": "Architectural",
+                "description": "Fabrication, hinge reinforcement, lock box fitting, and repair of swing or sliding driveway entrance gates.",
+                "min_price": 2500.0,
+                "max_price": 12000.0,
+                "typical_duration_hours": 6.0,
+                "complexity": "Medium",
+                "typical_materials": "Mild Steel Square Hollow Sections (SHS), Cast Spearheads, Heavy Pivot Hinges",
+                "typical_tools": "200A Arc Inverter, 4-inch Angle Grinder, Magnetic Squares, 2-Stage Clamps",
+                "recommended_welding_type": "Arc welding",
+                "preset_params": {
+                    "welding_type": "Arc welding",
+                    "duration_hours": 6.0,
+                    "number_of_joints": 24,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 35.0,
+                    "electrode_wire_qty": 30.0,
+                    "cutting_wheels_used": 3.0,
+                    "grinding_wheels_used": 2.0,
+                    "transport_km": 10.0,
+                    "labour_hours": 6.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Window Safety Grill & Balcony Enclosure Welding",
+                "slug": "grill-welding",
+                "category": "Architectural",
+                "description": "Precision welding of square bar or hollow section window safety grills, child barriers, and balcony railings.",
+                "min_price": 1500.0,
+                "max_price": 6500.0,
+                "typical_duration_hours": 4.0,
+                "complexity": "Medium",
+                "typical_materials": "12mm MS Square Bars, 25x5mm MS Flats, Expandable Metal Mesh",
+                "typical_tools": "Inverter Arc Welder, Chop Saw Stand, Angle Grinder, Tri-Square",
+                "recommended_welding_type": "Arc welding",
+                "preset_params": {
+                    "welding_type": "Arc welding",
+                    "duration_hours": 4.0,
+                    "number_of_joints": 32,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 22.0,
+                    "electrode_wire_qty": 25.0,
+                    "cutting_wheels_used": 2.0,
+                    "grinding_wheels_used": 2.0,
+                    "transport_km": 8.0,
+                    "labour_hours": 4.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Spiral & Straight Metal Staircase Fabrication",
+                "slug": "staircase-welding",
+                "category": "Structural",
+                "description": "Heavy structural fabrication of steel stringers, tread supports, safety handrails, and industrial platform stairs.",
+                "min_price": 8000.0,
+                "max_price": 35000.0,
+                "typical_duration_hours": 14.0,
+                "complexity": "High",
+                "typical_materials": "Heavy Channel (ISMC 100), Chequered Tread Plates, Pipe Handrails",
+                "typical_tools": "250A Dual Arc/MIG Welder, Heavy Chipping Hammer, Levels, Safety Harness",
+                "recommended_welding_type": "Arc welding",
+                "preset_params": {
+                    "welding_type": "Arc welding",
+                    "duration_hours": 12.0,
+                    "number_of_joints": 48,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 110.0,
+                    "electrode_wire_qty": 65.0,
+                    "cutting_wheels_used": 6.0,
+                    "grinding_wheels_used": 4.0,
+                    "transport_km": 15.0,
+                    "labour_hours": 12.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "High-Pressure Pipe Joint & Flange Welding",
+                "slug": "pipe-welding",
+                "category": "Industrial",
+                "description": "Butt-welding and socket welding of water, steam, hydraulic, or gas pipes with full penetration root and capping passes.",
+                "min_price": 2200.0,
+                "max_price": 9500.0,
+                "typical_duration_hours": 5.0,
+                "complexity": "Extreme",
+                "typical_materials": "Seamless Schedule 40 Carbon Steel, SS 316 Pipe, Weld Neck Flanges",
+                "typical_tools": "TIG/GTAW Inverter, High Frequency Torch, Pipe Vices, Internal Purging Bladder",
+                "recommended_welding_type": "TIG welding",
+                "preset_params": {
+                    "welding_type": "TIG welding",
+                    "duration_hours": 5.0,
+                    "number_of_joints": 6,
+                    "material_type": "Stainless Steel (SS 304)",
+                    "material_quantity_kg": 15.0,
+                    "electrode_wire_qty": 4.0,
+                    "gas_usage_litres": 85.0,
+                    "cutting_wheels_used": 2.0,
+                    "grinding_wheels_used": 2.0,
+                    "transport_km": 10.0,
+                    "labour_hours": 5.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Bike, Scooter & Vehicle Chassis / Silencer Repair",
+                "slug": "vehicle-welding",
+                "category": "Automotive",
+                "description": "Repairing cracked motorcycle subframes, exhaust silencer rust-outs, broken footpeg brackets, and bumper mounts.",
+                "min_price": 300.0,
+                "max_price": 2200.0,
+                "typical_duration_hours": 1.5,
+                "complexity": "Medium",
+                "typical_materials": "Thin-wall Automotive Steel Tube, Patch Plates, Exhaust Baffles",
+                "typical_tools": "MIG Wire Welder, Mini Die Grinder, Grounding Clamp with surge arrester",
+                "recommended_welding_type": "MIG welding",
+                "preset_params": {
+                    "welding_type": "MIG welding",
+                    "duration_hours": 1.5,
+                    "number_of_joints": 4,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 2.0,
+                    "electrode_wire_qty": 0.4,
+                    "gas_usage_litres": 15.0,
+                    "cutting_wheels_used": 1.0,
+                    "grinding_wheels_used": 1.0,
+                    "transport_km": 0.0,
+                    "labour_hours": 1.5
+                },
+                "image_url": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Agricultural Equipment & Tractor Attachment Repair",
+                "slug": "agricultural-repair",
+                "category": "Heavy Equipment",
+                "description": "Hardfacing and heavy joint welding of cultivator tines, rotavator blades, plough shears, and tractor trolley chassis.",
+                "min_price": 1800.0,
+                "max_price": 8500.0,
+                "typical_duration_hours": 4.5,
+                "complexity": "High",
+                "typical_materials": "High-Carbon Wear Plate, Hardfacing Electrodes, Heavy Gussets",
+                "typical_tools": "300A Heavy Duty Arc Welder, Preheating Torch, Sledgehammer, Heavy Clamps",
+                "recommended_welding_type": "Arc welding",
+                "preset_params": {
+                    "welding_type": "Arc welding",
+                    "duration_hours": 4.5,
+                    "number_of_joints": 12,
+                    "material_type": "Cast Iron",
+                    "material_quantity_kg": 28.0,
+                    "electrode_wire_qty": 35.0,
+                    "cutting_wheels_used": 3.0,
+                    "grinding_wheels_used": 3.0,
+                    "transport_km": 20.0,
+                    "labour_hours": 4.5
+                },
+                "image_url": "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Heavy Structural I-Beam, Truss & Shed Welding",
+                "slug": "structural-welding",
+                "category": "Structural",
+                "description": "Certified column splicing, baseplate welding, portal frame assembly, and roof truss web welding.",
+                "min_price": 12000.0,
+                "max_price": 60000.0,
+                "typical_duration_hours": 18.0,
+                "complexity": "Extreme",
+                "typical_materials": "ISMB 200/250 Joists, 16mm Baseplates, Grade 8.8 Stiffeners",
+                "typical_tools": "Low-Hydrogen E7018 Electrodes, 400A Three-Phase Inverter, Ultrasonic Testing preps",
+                "recommended_welding_type": "Arc welding",
+                "preset_params": {
+                    "welding_type": "Arc welding",
+                    "duration_hours": 16.0,
+                    "number_of_joints": 40,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 220.0,
+                    "electrode_wire_qty": 80.0,
+                    "cutting_wheels_used": 8.0,
+                    "grinding_wheels_used": 6.0,
+                    "transport_km": 25.0,
+                    "labour_hours": 16.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Sheet Metal Enclosure & Cabinet Welding",
+                "slug": "sheet-metal-welding",
+                "category": "Fabrication",
+                "description": "TIG/MIG stitch and continuous seam welding of thin gauge electrical control panels, battery racks, and sound enclosures.",
+                "min_price": 1400.0,
+                "max_price": 5500.0,
+                "typical_duration_hours": 3.5,
+                "complexity": "Medium",
+                "typical_materials": "1.2mm–2.0mm CRCA Sheet, Galvanized Sheets, Piano Hinges",
+                "typical_tools": "Short-circuit MIG or Pulsed TIG, Copper Chill Blocks, Sheet Clamps",
+                "recommended_welding_type": "MIG welding",
+                "preset_params": {
+                    "welding_type": "MIG welding",
+                    "duration_hours": 3.5,
+                    "number_of_joints": 16,
+                    "material_type": "Galvanized Iron (GI)",
+                    "material_quantity_kg": 14.0,
+                    "electrode_wire_qty": 1.2,
+                    "gas_usage_litres": 30.0,
+                    "cutting_wheels_used": 1.0,
+                    "grinding_wheels_used": 1.0,
+                    "transport_km": 5.0,
+                    "labour_hours": 3.5
+                },
+                "image_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Industrial Loft Metal & Wood Furniture Welding",
+                "slug": "furniture-welding",
+                "category": "Decorative",
+                "description": "Modern minimalist dining table bases, ergonomic desk frames, display shelves, and custom chairs with invisible ground welds.",
+                "min_price": 2000.0,
+                "max_price": 8500.0,
+                "typical_duration_hours": 5.0,
+                "complexity": "Medium",
+                "typical_materials": "Square Tubing 40x40mm (16 gauge), Threaded Leveler Inserts",
+                "typical_tools": "MIG/TIG Welder, Flap Sanding Wheels, Magnetic 90° Clamps",
+                "recommended_welding_type": "MIG welding",
+                "preset_params": {
+                    "welding_type": "MIG welding",
+                    "duration_hours": 5.0,
+                    "number_of_joints": 20,
+                    "material_type": "Mild Steel",
+                    "material_quantity_kg": 18.0,
+                    "electrode_wire_qty": 1.5,
+                    "gas_usage_litres": 40.0,
+                    "cutting_wheels_used": 2.0,
+                    "grinding_wheels_used": 3.0,
+                    "transport_km": 5.0,
+                    "labour_hours": 5.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                "name": "Custom Metal Art & Decorative Architectural Fabrication",
+                "slug": "custom-fabrication",
+                "category": "Artistic",
+                "description": "Bespoke metal sculptures, architectural screen facades, curved wrought iron planters, and designer lighting fixtures.",
+                "min_price": 3500.0,
+                "max_price": 25000.0,
+                "typical_duration_hours": 8.0,
+                "complexity": "High",
+                "typical_materials": "Hand-forged Wrought Iron, Solid Round Bars, Brass Inlays",
+                "typical_tools": "TIG Welder, Oxy-Acetylene Bending Torch, Anvil, Wire Wheel",
+                "recommended_welding_type": "TIG welding",
+                "preset_params": {
+                    "welding_type": "TIG welding",
+                    "duration_hours": 8.0,
+                    "number_of_joints": 30,
+                    "material_type": "Wrought Iron",
+                    "material_quantity_kg": 25.0,
+                    "electrode_wire_qty": 5.0,
+                    "gas_usage_litres": 90.0,
+                    "cutting_wheels_used": 3.0,
+                    "grinding_wheels_used": 4.0,
+                    "transport_km": 10.0,
+                    "labour_hours": 8.0
+                },
+                "image_url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+            }
+        ]
+        for s in services_data:
+            db.add(Service(**s))
+
+    # 5. Seed System Settings
+    if db.query(Setting).count() == 0:
+        settings_data = [
+            {"key": "default_electricity_rate", "value": "9.50", "data_type": "float", "category": "Rates", "description": "Commercial industrial power tariff in ₹ per kWh"},
+            {"key": "suggested_labour_rate", "value": "250.00", "data_type": "float", "category": "Rates", "description": "Benchmark certified welder wage in ₹ per hour"},
+            {"key": "transport_rate_per_km", "value": "16.00", "data_type": "float", "category": "Rates", "description": "Transport & tools conveyance charge in ₹ per km"},
+            {"key": "default_profit_margin", "value": "22.00", "data_type": "float", "category": "Rates", "description": "Recommended trade service profit margin (%)"},
+            {"key": "price_disclaimer_notice", "value": "All figures provided are realistic mathematical cost models based on current raw materials, electricity tariffs, and machine depreciation. Final quotation may vary depending on artisan experience and site conditions.", "data_type": "string", "category": "Disclaimer", "description": "Public transparency disclaimer banner"},
+            {"key": "machine_depreciation_formula", "value": "Purchase Price / Lifespan Hours + Annual Maintenance / 1500", "data_type": "string", "category": "Machine", "description": "Active depreciation formula"},
+        ]
+        for st in settings_data:
+            db.add(Setting(**st))
+
+    # 6. Seed Sample Quotations for Welder & Customer Showcase
+    if db.query(Quote).count() == 0 and welder_user:
+        sample_quotes = [
+            {
+                "quote_number": "WC-2026-101",
+                "user_id": welder_user.id,
+                "customer_name": "Vikram Malhotra",
+                "customer_email": "vikram@example.com",
+                "customer_phone": "+91 98200 44332",
+                "location": "Bandra West, Mumbai",
+                "urgency": "Standard",
+                "service_name": "Gate Welding & Main Entrance Fabrication",
+                "welding_type": "Arc welding",
+                "material_type": "Mild Steel",
+                "material_quantity_kg": 40.0,
+                "number_of_joints": 28,
+                "duration_hours": 6.5,
+                "labour_hours": 6.5,
+                "transport_km": 12.0,
+                "material_cost": 3000.0,
+                "electrode_wire_cost": 360.0,
+                "electricity_cost": 152.0,
+                "gas_cost": 0.0,
+                "grinding_cutting_cost": 215.0,
+                "machine_usage_cost": 54.0,
+                "labour_cost": 1950.0,
+                "transport_cost": 192.0,
+                "other_expenses_cost": 277.5,
+                "total_operating_cost": 6200.5,
+                "profit_margin_amount": 1364.11,
+                "recommended_price": 7565.0,
+                "status": "Accepted",
+                "created_at": datetime.datetime.utcnow() - datetime.timedelta(days=12),
+                "notes": "Sliding gate hinge overhaul with 4 new heavy-duty grease pivots and latch bracket."
+            },
+            {
+                "quote_number": "WC-2026-102",
+                "user_id": welder_user.id,
+                "customer_name": "Ananya Sen",
+                "customer_email": "ananya@example.com",
+                "customer_phone": "+91 97665 11223",
+                "location": "Powai, Mumbai",
+                "urgency": "Rush",
+                "service_name": "Window Safety Grill & Balcony Enclosure Welding",
+                "welding_type": "Arc welding",
+                "material_type": "Mild Steel",
+                "material_quantity_kg": 25.0,
+                "number_of_joints": 36,
+                "duration_hours": 4.5,
+                "labour_hours": 4.5,
+                "transport_km": 8.0,
+                "material_cost": 1875.0,
+                "electrode_wire_cost": 300.0,
+                "electricity_cost": 105.0,
+                "gas_cost": 0.0,
+                "grinding_cutting_cost": 180.0,
+                "machine_usage_cost": 38.0,
+                "labour_cost": 1350.0,
+                "transport_cost": 128.0,
+                "other_expenses_cost": 261.0,
+                "total_operating_cost": 4237.0,
+                "profit_margin_amount": 932.14,
+                "recommended_price": 5169.0,
+                "status": "Completed",
+                "created_at": datetime.datetime.utcnow() - datetime.timedelta(days=7),
+                "notes": "Balcony child safety bar additions and anti-corrosive zinc primer prep."
+            },
+            {
+                "quote_number": "WC-2026-103",
+                "user_id": welder_user.id,
+                "customer_name": "Karan Singhania",
+                "customer_email": "karan@example.com",
+                "customer_phone": "+91 99301 88776",
+                "location": "Thane West",
+                "urgency": "Standard",
+                "service_name": "Spiral & Straight Metal Staircase Fabrication",
+                "welding_type": "Arc welding",
+                "material_type": "Mild Steel",
+                "material_quantity_kg": 130.0,
+                "number_of_joints": 54,
+                "duration_hours": 15.0,
+                "labour_hours": 15.0,
+                "transport_km": 18.0,
+                "material_cost": 9750.0,
+                "electrode_wire_cost": 780.0,
+                "electricity_cost": 352.0,
+                "gas_cost": 0.0,
+                "grinding_cutting_cost": 490.0,
+                "machine_usage_cost": 125.0,
+                "labour_cost": 4500.0,
+                "transport_cost": 288.0,
+                "other_expenses_cost": 1079.0,
+                "total_operating_cost": 17364.0,
+                "profit_margin_amount": 3820.08,
+                "recommended_price": 21184.0,
+                "status": "Sent",
+                "created_at": datetime.datetime.utcnow() - datetime.timedelta(days=2),
+                "notes": "Mezzanine floor access metal staircase with dual handrails."
+            }
+        ]
+        for sq in sample_quotes:
+            db.add(Quote(**sq))
+
+    db.commit()
+
