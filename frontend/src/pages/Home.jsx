@@ -98,9 +98,9 @@ export default function Home() {
               {/* Welder Image Container with mask blend */}
               <div className="relative w-full h-[360px] sm:h-[420px] rounded-2xl overflow-hidden border border-[#1f2633] shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80"
-                  alt="Industrial Welder at Work with Sparks and Arc Light"
-                  className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
+                  src="/welder-hero.jpg"
+                  alt="Professional Welder at Work"
+                  className="w-full h-full object-cover object-top filter brightness-90 contrast-110 saturate-110"
                 />
                 
                 {/* Radial and gradient overlays to match reference seamlessly */}
