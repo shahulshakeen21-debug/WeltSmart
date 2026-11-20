@@ -12,7 +12,7 @@ import {
   Menu, 
   X, 
   LogOut, 
-  Cpu
+  ArrowRight
 } from "lucide-react";
 
 export default function Navbar() {
@@ -21,196 +21,197 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Overview", path: "/" },
-    { name: "Cost Engine", path: "/calculator", icon: Calculator },
-    { name: "Equipment Catalog", path: "/tools", icon: Wrench },
-    { name: "Cost Analysis", path: "/why-does-it-cost", icon: HelpCircle },
-    { name: "Service Directory", path: "/price-guide", icon: BookOpen },
-    { name: "Quote Generator", path: "/quote-generator", icon: FileText },
+    { name: "Home", path: "/" },
+    { name: "Monitoring & Calc", path: "/calculator" },
+    { name: "Analytics & Tools", path: "/tools" },
+    { name: "Price Guide", path: "/price-guide" },
+    { name: "Why Cost Analysis", path: "/why-does-it-cost" },
+    { name: "Quote Generator", path: "/quote-generator" },
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === "/" && location.pathname !== "/") return false;
+    return location.pathname === path;
+  };
 
   return (
-    <header className="sticky top-0 z-50 bg-industrial-950/95 backdrop-blur border-b border-industrial-750 no-print">
+    <header className="sticky top-0 z-50 bg-[#0c0f14]/95 backdrop-blur-md border-b border-[#1b212d] no-print">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center justify-between h-16">
           
-          {/* Brand Mark */}
+          {/* Brand Mark: Welder Mask Logo + Title */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-8 w-8 rounded-sm bg-industrial-900 border border-industrial-700 flex items-center justify-center text-forge-400 group-hover:border-forge-500/60 transition-colors">
-              <Cpu className="w-4 h-4 text-forge-400" />
+            <div className="h-10 w-10 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-500 group-hover:border-orange-500/80 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all">
+              {/* Exact Welder Helmet SVG Icon */}
+              <svg 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="w-5 h-5 text-orange-500"
+              >
+                <path d="M4 10a8 8 0 0 1 16 0v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7z" />
+                <rect x="7" y="8" width="10" height="5" rx="1" />
+                <line x1="9" y1="17" x2="15" y2="17" />
+                <line x1="10" y1="19" x2="14" y2="19" />
+                <circle cx="4" cy="11" r="1" />
+                <circle cx="20" cy="11" r="1" />
+              </svg>
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-black tracking-wider text-white font-mono uppercase">
-                  Weld<span className="text-forge-400">Cost</span>
-                </span>
-                <span className="text-[9px] font-mono font-bold bg-industrial-850 text-industrial-400 border border-industrial-750 px-1 rounded-xs">
-                  v2.4
-                </span>
-              </div>
-              <span className="text-[9px] font-mono text-industrial-500 uppercase tracking-widest -mt-0.5">
-                Industrial Cost Suite
+              <span className="text-base font-black tracking-wider text-white font-sans uppercase">
+                WELD<span className="text-orange-500">TECH</span>
+              </span>
+              <span className="text-[9px] font-mono tracking-widest text-industrial-400 uppercase -mt-0.5">
+                SMART WELDING SYSTEM
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-0.5">
+          <nav className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => {
               const active = isActive(link.path);
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`px-3 py-1.5 rounded-sm text-xs font-medium transition-colors relative ${
+                  className={`px-3.5 py-5 text-xs font-medium transition-colors relative flex items-center ${
                     active
-                      ? "text-white bg-industrial-850 font-semibold"
-                      : "text-industrial-400 hover:text-industrial-200 hover:bg-industrial-900"
+                      ? "text-white font-bold"
+                      : "text-industrial-400 hover:text-white"
                   }`}
                 >
                   {link.name}
                   {active && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-forge-500" />
+                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-orange-500 rounded-full" />
                   )}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right Action / Auth Buttons */}
-          <div className="hidden md:flex items-center gap-2">
-            {/* Welder Mode Console Button */}
-            <Link
-              to="/welder-dashboard"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold tracking-wider uppercase font-mono transition-colors ${
-                location.pathname.startsWith("/welder")
-                  ? "bg-forge-500 text-white"
-                  : "bg-industrial-900 text-forge-400 border border-forge-500/30 hover:bg-industrial-850 hover:border-forge-500/60"
-              }`}
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>Welder Console</span>
-            </Link>
+          {/* Right Action / Status / Auth */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* System Online Status Indicator */}
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-xs font-medium text-industrial-300">System Online</span>
+            </div>
+
+            {/* Welder Mode Console (if logged in as welder) */}
+            {user?.role === "welder" && (
+              <Link
+                to="/welder-dashboard"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-400 border border-orange-500/40 hover:bg-orange-500 hover:text-white transition-all"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>Welder Console</span>
+              </Link>
+            )}
 
             {/* Admin shortcut */}
             {isAdmin && (
               <Link
                 to="/admin"
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-sm text-xs font-mono text-industrial-300 bg-industrial-900 border border-industrial-750 hover:text-white"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500 hover:text-white transition-all"
               >
-                <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                <ShieldAlert className="w-3.5 h-3.5" />
                 <span>Admin</span>
               </Link>
             )}
 
-            {/* User Session Info / Login */}
+            {/* Login / User pill button */}
             {user ? (
-              <div className="flex items-center gap-2 pl-2 border-l border-industrial-800">
-                <div className="text-right">
-                  <div className="text-xs font-medium text-industrial-200 truncate max-w-[120px]">
-                    {user.full_name}
-                  </div>
-                  <span className="text-[10px] text-forge-400 uppercase font-mono">
-                    {user.role}
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 border-l border-[#1f2633] pl-3">
+                <span className="text-xs font-medium text-industrial-300 truncate max-w-[120px]">
+                  {user.full_name?.split(" ")[0] || user.email}
+                </span>
                 <button
                   onClick={logout}
-                  title="Logout session"
-                  className="p-1.5 text-industrial-400 hover:text-industrial-200 hover:bg-industrial-900 rounded-sm transition-colors"
+                  title="Logout"
+                  className="p-1.5 text-industrial-400 hover:text-red-400 rounded-full hover:bg-industrial-800 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 pl-2 border-l border-industrial-800">
-                <Link
-                  to="/login"
-                  className="px-2.5 py-1.5 text-xs text-industrial-300 hover:text-white hover:bg-industrial-900 rounded-sm transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-3 py-1.5 text-xs font-semibold bg-industrial-850 hover:bg-industrial-800 text-white border border-industrial-700 rounded-sm transition-colors"
-                >
-                  Register
-                </Link>
-              </div>
+              <Link
+                to="/login"
+                className="flex items-center gap-2 px-5 py-1.5 rounded-full text-xs font-semibold text-industrial-200 hover:text-white border border-amber-600/60 hover:border-orange-500 hover:bg-orange-500/10 transition-all shadow-sm"
+              >
+                <span>Login</span>
+                <ArrowRight className="w-3.5 h-3.5 text-orange-500" />
+              </Link>
             )}
           </div>
 
-          {/* Mobile menu trigger */}
-          <div className="flex md:hidden">
+          {/* Mobile Menu Button */}
+          <div className="flex items-center md:hidden gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-[10px] text-industrial-400">Online</span>
+            </div>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-sm text-industrial-400 hover:text-white hover:bg-industrial-900"
-              aria-label="Toggle menu"
+              className="p-2 text-industrial-400 hover:text-white rounded-lg bg-industrial-900 border border-industrial-800"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
+
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-industrial-950 border-b border-industrial-800 px-4 pt-2 pb-4 space-y-1">
+        <div className="md:hidden bg-[#0c0f14] border-b border-[#1b212d] px-4 pt-3 pb-6 space-y-2">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-3 py-2 rounded-sm text-xs font-medium ${
+              className={`block px-3 py-2 rounded-lg text-xs font-medium ${
                 isActive(link.path)
-                  ? "bg-industrial-900 text-white border-l-2 border-forge-500 font-semibold"
-                  : "text-industrial-400 hover:bg-industrial-900 hover:text-white"
+                  ? "bg-orange-500/20 text-orange-400 font-bold border-l-2 border-orange-500"
+                  : "text-industrial-300 hover:bg-industrial-900"
               }`}
             >
               {link.name}
             </Link>
           ))}
-          <div className="pt-3 border-t border-industrial-800 flex flex-col gap-2">
+          <div className="pt-3 border-t border-[#1b212d] flex flex-col gap-2">
             <Link
               to="/welder-dashboard"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 text-center rounded-sm text-xs font-bold font-mono tracking-wider bg-industrial-900 text-forge-400 border border-forge-500/40"
+              className="px-3 py-2 text-xs font-semibold rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/30 text-center"
             >
-              WELDER CONSOLE
+              Welder Dashboard
             </Link>
-            {isAdmin && (
-              <Link
-                to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 text-center rounded-sm text-xs font-mono text-amber-400 bg-industrial-900 border border-industrial-750"
-              >
-                ADMIN PANEL
-              </Link>
-            )}
             {user ? (
-              <div className="flex items-center justify-between px-3 py-2 bg-industrial-900 rounded-sm">
-                <span className="text-xs text-industrial-300 font-mono">{user.full_name} ({user.role})</span>
-                <button onClick={logout} className="text-xs text-red-400 font-medium">Exit</button>
-              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="px-3 py-2 text-xs font-semibold rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 text-center"
+              >
+                Sign Out ({user.email})
+              </button>
             ) : (
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-1.5 text-center text-xs font-medium text-industrial-300 bg-industrial-900 rounded-sm border border-industrial-800"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-1.5 text-center text-xs font-semibold text-white bg-forge-600 rounded-sm"
-                >
-                  Register
-                </Link>
-              </div>
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 text-xs font-semibold rounded-full bg-orange-500 text-white text-center flex items-center justify-center gap-1.5"
+              >
+                <span>Login</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             )}
           </div>
         </div>

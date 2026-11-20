@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Cpu, ShieldCheck, Layers, FileCode } from "lucide-react";
+import { ShieldCheck, Layers, FileCode } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-industrial-950 border-t border-industrial-800 text-industrial-400 text-xs no-print">
+    <footer className="bg-[#0a0d12] border-t border-[#1b212d] text-industrial-400 text-xs no-print">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
-        {/* Top Technical Formula Bar */}
-        <div className="mb-8 p-4 bg-industrial-900 border border-industrial-800 rounded-sm font-mono text-[11px] flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        {/* Top Formula Banner */}
+        <div className="mb-8 p-4 bg-[#121620] border border-[#1f2633] rounded-2xl font-mono text-[11px] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-2 text-industrial-300">
-            <FileCode className="w-4 h-4 text-forge-400 shrink-0" />
-            <span className="font-bold text-white uppercase">Standard Cost Formula:</span>
+            <span className="w-1 h-3.5 bg-orange-500 rounded-full inline-block shrink-0" />
+            <span className="font-bold text-white uppercase">Cost Transparency Equation:</span>
             <span className="text-industrial-400">
               Total = Material + Consumables + Machine Depreciation + Power + Labour + Transport + Margin
             </span>
@@ -24,47 +24,54 @@ export default function Footer() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Col 1: System Identification */}
+          {/* Col 1: Brand & Description */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-xs bg-industrial-900 border border-industrial-700 flex items-center justify-center text-forge-400">
-                <Cpu className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-500">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="M4 10a8 8 0 0 1 16 0v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-7z" />
+                  <rect x="7" y="8" width="10" height="5" rx="1" />
+                  <line x1="9" y1="17" x2="15" y2="17" />
+                  <circle cx="4" cy="11" r="1" />
+                  <circle cx="20" cy="11" r="1" />
+                </svg>
               </div>
-              <span className="font-black text-white font-mono tracking-wider uppercase">
-                Weld<span className="text-forge-400">Cost</span>
+              <span className="font-black text-white font-sans tracking-wider uppercase text-sm">
+                WELD<span className="text-orange-500">TECH</span>
               </span>
             </div>
             <p className="text-[11px] text-industrial-400 leading-relaxed">
               Industrial price modeling suite designed to bridge the transparency gap in metal fabrication by itemizing equipment depreciation, energy draw, abrasive wear, and certified artisan labour.
             </p>
-            <div className="text-[10px] font-mono text-industrial-500">
-              STATUS: PRODUCTION • REGISTRY ACTIVE
+            <div className="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>STATUS: PRODUCTION ONLINE</span>
             </div>
           </div>
 
-          {/* Col 2: Engineering Calculators */}
+          {/* Col 2: Calculation Engines */}
           <div>
-            <h4 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2.5 font-mono">
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">
               Calculation Engines
             </h4>
-            <ul className="space-y-1.5 text-[11px]">
+            <ul className="space-y-2 text-[11px]">
               <li>
-                <Link to="/calculator" className="hover:text-forge-400 transition-colors">
+                <Link to="/calculator" className="hover:text-orange-400 transition-colors">
                   Multi-Process Cost Engine (Arc, MIG, TIG)
                 </Link>
               </li>
               <li>
-                <Link to="/#why-500" className="hover:text-forge-400 transition-colors">
+                <Link to="/#why-500" className="hover:text-orange-400 transition-colors">
                   Cost Decomposition Ledger ("Why ₹500?")
                 </Link>
               </li>
               <li>
-                <Link to="/tools" className="hover:text-forge-400 transition-colors">
+                <Link to="/tools" className="hover:text-orange-400 transition-colors">
                   Industrial Equipment Amortization Catalog
                 </Link>
               </li>
               <li>
-                <Link to="/why-does-it-cost" className="hover:text-forge-400 transition-colors">
+                <Link to="/why-does-it-cost" className="hover:text-orange-400 transition-colors">
                   Cost Structure & "1-Hour Illusion" Analysis
                 </Link>
               </li>
@@ -73,69 +80,69 @@ export default function Footer() {
 
           {/* Col 3: Service Categories */}
           <div>
-            <h4 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2.5 font-mono">
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">
               Fabrication Standards
             </h4>
-            <ul className="space-y-1.5 text-[11px]">
+            <ul className="space-y-2 text-[11px]">
               <li>
-                <Link to="/price-guide" className="hover:text-forge-400 transition-colors">
+                <Link to="/price-guide" className="hover:text-orange-400 transition-colors">
                   Architectural Entrance Gates & Portals
                 </Link>
               </li>
               <li>
-                <Link to="/price-guide" className="hover:text-forge-400 transition-colors">
+                <Link to="/price-guide" className="hover:text-orange-400 transition-colors">
                   Window Enclosures & Safety Railings
                 </Link>
               </li>
               <li>
-                <Link to="/price-guide" className="hover:text-forge-400 transition-colors">
+                <Link to="/price-guide" className="hover:text-orange-400 transition-colors">
                   Structural Staircases & Stringer Channels
                 </Link>
               </li>
               <li>
-                <Link to="/quote-generator" className="text-forge-400 hover:text-forge-300 font-medium">
+                <Link to="/quote-generator" className="text-orange-400 hover:text-orange-300 font-semibold">
                   Generate Formal Engineering Quotation →
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Artisan Console */}
+          {/* Col 4: Welder Mode & Admin Access */}
           <div>
-            <h4 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2.5 font-mono">
-              Fabricator Portal
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">
+              Operator Portal
             </h4>
-            <ul className="space-y-1.5 text-[11px]">
-              <li>
-                <Link to="/welder-dashboard" className="text-industrial-300 hover:text-forge-400 transition-colors">
-                  Welder Mode Operating Console
-                </Link>
-              </li>
-              <li>
-                <Link to="/welder-dashboard" className="hover:text-forge-400 transition-colors">
-                  Minimum Profitable Price Engine
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin" className="hover:text-forge-400 transition-colors">
-                  Central Benchmark Settings Registry
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="hover:text-forge-400 transition-colors">
-                  Account Sign In / Switch Profile
-                </Link>
-              </li>
-            </ul>
+            <p className="text-[11px] text-industrial-400 leading-relaxed mb-3">
+              Welders can register their workshops, set specific machinery tariffs, calculate anti-undercharging break-evens, and download professional client quotes.
+            </p>
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/welder-dashboard"
+                className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-orange-500/10 hover:bg-orange-500 hover:text-white text-orange-400 text-xs font-bold transition-all border border-orange-500/30 text-center"
+              >
+                Launch Welder Mode
+              </Link>
+              <Link
+                to="/login"
+                className="text-industrial-500 hover:text-industrial-300 text-[10px] text-center"
+              >
+                Sign In to Workshop Account
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Technical Line */}
-        <div className="pt-6 border-t border-industrial-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-industrial-500 font-mono gap-3">
-          <p>© {new Date().getFullYear()} WeldCost Systems. Engineering cost modeling software.</p>
-          <div className="flex items-center gap-1.5 text-industrial-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Industrial Engineering Benchmark Engine</span>
+        {/* Bottom Disclaimers */}
+        <div className="pt-6 border-t border-[#1b212d] flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-industrial-500">
+          <div>
+            © {new Date().getFullYear()} WELDTECH – Smart Welding System & Cost Platform. All Rights Reserved.
+          </div>
+          <div className="flex items-center gap-4">
+            <span>Engineering Transparency</span>
+            <span>•</span>
+            <span>ISO 5817 & AWS D1.1</span>
+            <span>•</span>
+            <span>Zero Loss Guarantee</span>
           </div>
         </div>
 

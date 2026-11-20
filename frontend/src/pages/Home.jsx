@@ -8,11 +8,19 @@ import {
   ArrowRight, 
   CheckCircle2, 
   AlertTriangle,
-  Cpu,
   Layers,
   Clock,
   ShieldCheck,
-  Scale
+  Scale,
+  Play,
+  Activity,
+  Thermometer,
+  Zap,
+  Gauge,
+  Cpu,
+  TrendingUp,
+  Settings,
+  Shield
 } from "lucide-react";
 import Why500Section from "../components/Why500Section";
 
@@ -30,410 +38,589 @@ export default function Home() {
   const teaserPrice = Math.round(teaserTotal * 1.22);
 
   return (
-    <div className="min-h-screen bg-industrial-950 text-industrial-200">
+    <div className="min-h-screen bg-[#0c0f14] text-industrial-200">
       
-      {/* Hero Section: Technical Product Introduction */}
-      <section className="relative pt-12 pb-16 md:pt-16 md:pb-24 border-b border-industrial-800 tech-grid">
+      {/* =========================================================================
+          HERO SECTION: MATCHING EXACT REFERENCE DESIGN
+          ========================================================================= */}
+      <section className="relative pt-8 pb-12 overflow-hidden border-b border-[#1b212d]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[440px]">
             
-            {/* Left Column: Product Positioning */}
-            <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-industrial-900 border border-industrial-750 text-industrial-400 font-mono text-[11px] uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-forge-500"></span>
-                <span>Industrial Fabrication & Cost Modeling Suite</span>
+            {/* Left Column: Heading & CTAs */}
+            <div className="lg:col-span-7 z-10 space-y-5">
+              
+              {/* Kicker: PRECISION • EFFICIENCY • RELIABILITY */}
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-orange-500 uppercase">
+                <span>PRECISION</span>
+                <span className="text-orange-400">•</span>
+                <span>EFFICIENCY</span>
+                <span className="text-orange-400">•</span>
+                <span>RELIABILITY</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
-                Understand the Real Cost <br className="hidden sm:inline" />
-                Behind Every Weld.
+              {/* Exact Hero Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.08]">
+                Smart Welding <br />
+                <span className="text-orange-500">Monitoring System</span>
               </h1>
 
-              <p className="text-sm sm:text-base text-industrial-300 max-w-2xl leading-relaxed">
-                Know what you're paying for. WeldCost itemizes equipment depreciation, commercial electricity tariffs, consumable rod depletion, and skilled artisan labour to establish fair fabrication pricing.
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base text-industrial-300 max-w-xl leading-relaxed">
+                Real-time weld quality analysis and defect detection using advanced machine learning techniques and transparent cost engineering.
               </p>
 
-              {/* Functional CTA Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-3">
+              {/* Exact Pill Action Buttons */}
+              <div className="pt-2 flex flex-wrap items-center gap-4">
                 <Link
                   to="/calculator"
-                  className="px-5 py-2.5 rounded-sm bg-forge-600 hover:bg-forge-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-2"
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-7 py-3 rounded-full flex items-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] transition-all text-xs uppercase tracking-wider group"
                 >
-                  <Calculator className="w-4 h-4" />
-                  <span>Launch Cost Calculator</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-
-                <Link
-                  to="/tools"
-                  className="px-4 py-2.5 rounded-sm bg-industrial-900 hover:bg-industrial-850 text-industrial-300 hover:text-white border border-industrial-750 font-mono text-xs uppercase tracking-wider transition-colors flex items-center gap-2"
-                >
-                  <Wrench className="w-3.5 h-3.5 text-industrial-400" />
-                  <span>Equipment Catalog</span>
+                  <span>Start Monitoring</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <Link
                   to="/why-does-it-cost"
-                  className="px-4 py-2.5 rounded-sm bg-industrial-900 hover:bg-industrial-850 text-industrial-300 hover:text-white border border-industrial-750 font-mono text-xs uppercase tracking-wider transition-colors flex items-center gap-2"
+                  className="bg-[#121620] hover:bg-[#1a202c] text-white border border-[#232c3f] font-bold px-6 py-3 rounded-full flex items-center gap-2 transition-all text-xs uppercase tracking-wider"
                 >
-                  <HelpCircle className="w-3.5 h-3.5 text-industrial-400" />
-                  <span>Why It Costs?</span>
+                  <Play className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                  <span>Learn More</span>
                 </Link>
               </div>
 
-              {/* Technical System Status Strip */}
-              <div className="pt-6 border-t border-industrial-800 grid grid-cols-3 gap-4 max-w-lg text-left font-mono">
-                <div>
-                  <div className="text-[10px] text-industrial-500 uppercase">CALCULATION MODEL</div>
-                  <div className="text-sm font-bold text-white mt-0.5">BOM + Overhead</div>
+            </div>
+
+            {/* Right Column: Welder Mask Photo & Sparks with diagonal vignette */}
+            <div className="lg:col-span-5 relative flex items-center justify-center">
+              
+              {/* Welder Image Container with mask blend */}
+              <div className="relative w-full h-[360px] sm:h-[420px] rounded-2xl overflow-hidden border border-[#1f2633] shadow-2xl">
+                <img
+                  src="https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80"
+                  alt="Industrial Welder at Work with Sparks and Arc Light"
+                  className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
+                />
+                
+                {/* Radial and gradient overlays to match reference seamlessly */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c0f14] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f14] via-transparent to-transparent opacity-60" />
+
+                {/* Subtle blue arc glow accent */}
+                <div className="absolute bottom-12 right-20 w-32 h-32 bg-cyan-400/20 blur-2xl rounded-full pointer-events-none" />
+                <div className="absolute bottom-16 right-24 w-16 h-16 bg-orange-500/20 blur-xl rounded-full pointer-events-none" />
+              </div>
+
+              {/* Exact Vertical Index Stepper on Far Right */}
+              <div className="hidden sm:flex flex-col items-center gap-3 absolute -right-2 top-1/2 -translate-y-1/2 font-mono text-xs font-bold">
+                <span className="text-orange-500">01</span>
+                <span className="text-industrial-600">02</span>
+                <span className="text-industrial-700">03</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* =========================================================================
+              EXACT DASHBOARD ROW 1: 3 CARDS
+              - Key Features
+              - Weld Quality Status
+              - Live Welding Parameters
+              ========================================================================= */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+            
+            {/* CARD 1: Key Features */}
+            <div className="lg:col-span-4 bg-[#121620] border border-[#1f2633] rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+                  <h3 className="font-bold text-white text-sm tracking-wide">Key Features</h3>
                 </div>
-                <div>
-                  <div className="text-[10px] text-industrial-500 uppercase">RATE REGISTRY</div>
-                  <div className="text-sm font-bold text-white mt-0.5">Commercial 2026</div>
-                </div>
-                <div>
-                  <div className="text-[10px] text-industrial-500 uppercase">DEPRECIATION</div>
-                  <div className="text-sm font-bold text-forge-400 mt-0.5">Amortized / hr</div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Feature 1 */}
+                  <div className="bg-[#0c0f14]/80 border border-[#1b212d] rounded-xl p-3 flex flex-col gap-2 hover:border-orange-500/40 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400">
+                      <Activity className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-semibold text-white leading-tight">
+                      Real-Time Monitoring
+                    </span>
+                  </div>
+
+                  {/* Feature 2 */}
+                  <div className="bg-[#0c0f14]/80 border border-[#1b212d] rounded-xl p-3 flex flex-col gap-2 hover:border-orange-500/40 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-semibold text-white leading-tight">
+                      Defect Detection
+                    </span>
+                  </div>
+
+                  {/* Feature 3 */}
+                  <div className="bg-[#0c0f14]/80 border border-[#1b212d] rounded-xl p-3 flex flex-col gap-2 hover:border-orange-500/40 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400">
+                      <TrendingUp className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-semibold text-white leading-tight">
+                      Data Analytics
+                    </span>
+                  </div>
+
+                  {/* Feature 4 */}
+                  <div className="bg-[#0c0f14]/80 border border-[#1b212d] rounded-xl p-3 flex flex-col gap-2 hover:border-orange-500/40 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400">
+                      <Settings className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-semibold text-white leading-tight">
+                      Automated Alerts
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Industrial Parameter Console */}
-            <div className="lg:col-span-5">
-              <div className="bg-industrial-900 border border-industrial-750 rounded-sm overflow-hidden shadow-panel">
-                
-                {/* Console Top Bar */}
-                <div className="bg-industrial-850 px-4 py-2.5 border-b border-industrial-750 flex items-center justify-between">
+            {/* CARD 2: Weld Quality Status (Circular Progress Gauge) */}
+            <div className="lg:col-span-4 bg-[#121620] border border-[#1f2633] rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-xs bg-forge-500"></span>
-                    <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider">
-                      PARAMETER SIMULATOR // FAST AUDIT
-                    </span>
+                    <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+                    <h3 className="font-bold text-white text-sm tracking-wide">Weld Quality Status</h3>
                   </div>
-                  <span className="text-[10px] font-mono text-industrial-400">
-                    REALTIME
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-semibold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                    Healthy
                   </span>
                 </div>
 
-                <div className="p-5 space-y-4">
-                  {/* Process Selector */}
+                <div className="flex items-center justify-around pt-2">
+                  {/* SVG Circular Ring Gauge */}
+                  <div className="relative w-28 h-28 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                      {/* Background Track */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="#1c2332"
+                        strokeWidth="8"
+                      />
+                      {/* Active Green Arc */}
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="transparent"
+                        stroke="#10b981"
+                        strokeWidth="8"
+                        strokeDasharray="251.2"
+                        strokeDashoffset="7.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-xl font-black text-white font-mono">98.5%</span>
+                      <span className="text-[9px] text-industrial-400 font-medium">Quality Score</span>
+                    </div>
+                  </div>
+
+                  {/* Status Breakdown Legend */}
+                  <div className="space-y-2 text-xs font-mono">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className="text-industrial-300">Healthy</span>
+                      </div>
+                      <span className="font-bold text-white">98.5%</span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        <span className="text-industrial-300">Warning</span>
+                      </div>
+                      <span className="font-bold text-white">1.2%</span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-red-500" />
+                        <span className="text-industrial-300">Critical</span>
+                      </div>
+                      <span className="font-bold text-white">0.3%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 3: Live Welding Parameters with Sparkline Curve */}
+            <div className="lg:col-span-4 bg-[#121620] border border-[#1f2633] rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+                  <h3 className="font-bold text-white text-sm tracking-wide">Live Welding Parameters</h3>
+                </div>
+
+                {/* 4 Telemetry Metrics */}
+                <div className="grid grid-cols-4 gap-2 text-center pb-3">
                   <div>
-                    <label className="text-[11px] font-mono font-semibold text-industrial-400 uppercase tracking-wider block mb-1.5">
-                      Process Type
-                    </label>
-                    <div className="grid grid-cols-2 gap-1.5 font-mono text-xs">
-                      {["Arc welding", "MIG welding", "TIG welding", "Gas welding"].map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => setMiniWeldingType(type)}
-                          className={`py-1.5 px-2.5 rounded-xs border text-left transition-colors ${
-                            miniWeldingType === type
-                              ? "bg-industrial-800 border-forge-500/70 text-white font-bold"
-                              : "bg-industrial-950 border-industrial-800 text-industrial-400 hover:text-industrial-300"
-                          }`}
-                        >
-                          {type}
-                        </button>
-                      ))}
-                    </div>
+                    <Thermometer className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+                    <div className="text-xs font-bold text-white font-mono">72.4°C</div>
+                    <div className="text-[9px] text-industrial-400">Temperature</div>
                   </div>
 
-                  {/* Sliders */}
-                  <div className="space-y-3 font-mono text-xs">
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-industrial-400">Duration (Active Arc + Setup):</span>
-                        <span className="font-bold text-white">{miniHours} hrs</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0.5"
-                        max="10"
-                        step="0.5"
-                        value={miniHours}
-                        onChange={(e) => setMiniHours(parseFloat(e.target.value))}
-                        className="w-full accent-forge-500 cursor-pointer h-1 bg-industrial-800"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-industrial-400">Welded Joints Count:</span>
-                        <span className="font-bold text-white">{miniJoints} joints</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="2"
-                        max="40"
-                        step="1"
-                        value={miniJoints}
-                        onChange={(e) => setMiniJoints(parseInt(e.target.value))}
-                        className="w-full accent-forge-500 cursor-pointer h-1 bg-industrial-800"
-                      />
-                    </div>
+                  <div>
+                    <Zap className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+                    <div className="text-xs font-bold text-white font-mono">18.5 A</div>
+                    <div className="text-[9px] text-industrial-400">Current</div>
                   </div>
 
-                  {/* Ledger Summary Box */}
-                  <div className="bg-industrial-950 border border-industrial-800 rounded-xs p-3 font-mono text-xs space-y-1.5">
-                    <div className="flex justify-between text-industrial-400">
-                      <span>Machine Tool Wear & Power:</span>
-                      <span className="text-industrial-200">₹{teaserMachineCost + teaserPowerCost}</span>
-                    </div>
-                    <div className="flex justify-between text-industrial-400">
-                      <span>Filler Rods & Discs:</span>
-                      <span className="text-industrial-200">₹{teaserConsumables}</span>
-                    </div>
-                    <div className="flex justify-between text-industrial-400">
-                      <span>Labour ({miniHours}h skilled):</span>
-                      <span className="text-industrial-200">₹{teaserLabour}</span>
-                    </div>
-                    <div className="flex justify-between text-industrial-400">
-                      <span>Haulage & Safety Wear:</span>
-                      <span className="text-industrial-200">₹80</span>
-                    </div>
-                    <div className="pt-2 border-t border-industrial-800 flex justify-between font-sans text-xs">
-                      <span className="font-bold text-white">Recommended Invoice Floor:</span>
-                      <span className="text-base font-bold text-forge-400 font-mono">
-                        ₹{teaserPrice.toLocaleString()}
-                      </span>
-                    </div>
+                  <div>
+                    <Gauge className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+                    <div className="text-xs font-bold text-white font-mono">23.7 V</div>
+                    <div className="text-[9px] text-industrial-400">Voltage</div>
                   </div>
 
-                  <Link
-                    to="/calculator"
-                    className="w-full py-2 bg-industrial-850 hover:bg-industrial-800 text-industrial-200 hover:text-white border border-industrial-750 font-mono font-semibold text-xs rounded-xs text-center block transition-colors uppercase tracking-wider"
-                  >
-                    Open Full Multi-Variable Calculator →
-                  </Link>
+                  <div>
+                    <Activity className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+                    <div className="text-xs font-bold text-white font-mono">2.8 mm/s</div>
+                    <div className="text-[9px] text-industrial-400">Feed Rate</div>
+                  </div>
+                </div>
+
+                {/* Live Sparkline Graph */}
+                <div className="relative pt-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col justify-between h-10 text-[8px] font-mono text-industrial-500">
+                      <span>100</span>
+                      <span>50</span>
+                      <span>0</span>
+                    </div>
+                    <div className="w-full h-10 relative flex items-center">
+                      <svg className="w-full h-full overflow-visible" viewBox="0 0 200 40" preserveAspectRatio="none">
+                        {/* Grid lines */}
+                        <line x1="0" y1="5" x2="200" y2="5" stroke="#1c2332" strokeWidth="0.7" strokeDasharray="2,2" />
+                        <line x1="0" y1="20" x2="200" y2="20" stroke="#1c2332" strokeWidth="0.7" strokeDasharray="2,2" />
+                        <line x1="0" y1="35" x2="200" y2="35" stroke="#1c2332" strokeWidth="0.7" strokeDasharray="2,2" />
+                        {/* Sine Waveform Curve in Orange */}
+                        <path
+                          d="M0,25 Q20,15 40,25 T80,25 T120,18 T160,26 T200,20"
+                          fill="none"
+                          stroke="#f97316"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* =========================================================================
+              EXACT DASHBOARD ROW 2: WELDING PROCESS FLOW
+              ========================================================================= */}
+          <div className="mt-5 bg-[#121620] border border-[#1f2633] rounded-2xl p-5 shadow-xl">
+            <div className="flex items-center gap-2 mb-5">
+              <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+              <h3 className="font-bold text-white text-sm tracking-wide">Welding Process Flow</h3>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              
+              {/* Left: 4 Sequence Steps with Arrows */}
+              <div className="lg:col-span-8 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
+                
+                {/* Step 1: Input Material */}
+                <div className="flex flex-col items-center text-center p-3 rounded-xl bg-[#0c0f14]/80 border border-[#1b212d] w-full sm:w-32 hover:border-orange-500/40 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 mb-2">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-white">Input Material</span>
+                </div>
+
+                <ArrowRight className="hidden sm:block w-4 h-4 text-industrial-500 shrink-0" />
+
+                {/* Step 2: Welding Process */}
+                <div className="flex flex-col items-center text-center p-3 rounded-xl bg-[#0c0f14]/80 border border-[#1b212d] w-full sm:w-32 hover:border-orange-500/40 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 mb-2">
+                    {/* Torch & Arc SVG */}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <path d="M12 18v-4" />
+                      <path d="M10 16l2-2 2 2" />
+                    </svg>
+                  </div>
+                  <span className="text-xs font-semibold text-white">Welding Process</span>
+                </div>
+
+                <ArrowRight className="hidden sm:block w-4 h-4 text-industrial-500 shrink-0" />
+
+                {/* Step 3: Quality Analysis */}
+                <div className="flex flex-col items-center text-center p-3 rounded-xl bg-[#0c0f14]/80 border border-[#1b212d] w-full sm:w-32 hover:border-orange-500/40 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 mb-2">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-white">Quality Analysis</span>
+                </div>
+
+                <ArrowRight className="hidden sm:block w-4 h-4 text-industrial-500 shrink-0" />
+
+                {/* Step 4: Result Report */}
+                <div className="flex flex-col items-center text-center p-3 rounded-xl bg-[#0c0f14]/80 border border-[#1b212d] w-full sm:w-32 hover:border-orange-500/40 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-400 mb-2">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-semibold text-white">Result Report</span>
                 </div>
 
               </div>
-            </div>
 
-          </div>
-        </div>
-      </section>
+              {/* Right: Slanted Metallic Seam Photo Slice */}
+              <div className="lg:col-span-4 relative rounded-xl overflow-hidden border border-[#1f2633] h-28 flex items-center">
+                <img
+                  src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80"
+                  alt="Precision Welded Metal Seam"
+                  className="w-full h-full object-cover filter contrast-125 brightness-75"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0c0f14]/90 via-[#0c0f14]/70 to-transparent" />
+                
+                {/* Slanted Orange Accent Line */}
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500 transform -skew-x-12" />
 
-      {/* Section 2: Technical Contrast: Market Misconception vs Engineering Reality */}
-      <section className="py-16 bg-industrial-900 border-b border-industrial-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="max-w-3xl mb-10">
-            <div className="flex items-center gap-2 mb-1 text-[10px] font-mono uppercase font-bold text-industrial-400">
-              <span className="w-1.5 h-1.5 bg-industrial-500 rounded-xs"></span>
-              <span>Module 02 // Pricing Disconnect Analysis</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Why Fabrication Quotes Are Frequently Misunderstood
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-industrial-400 leading-relaxed">
-              When clients perceive a welding charge as solely payment for physical time, they omit the industrial machinery operating on their behalf.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left: The Informal Perception */}
-            <div className="bg-industrial-950 border border-industrial-750 rounded-sm p-6 space-y-4">
-              <div className="flex items-center gap-2 text-industrial-400 font-mono text-xs font-bold uppercase">
-                <AlertTriangle className="w-4 h-4 text-industrial-500" />
-                <span>The Informal Client Assumption</span>
-              </div>
-              
-              <h3 className="text-base font-bold text-white">
-                "The welder only spent 45 minutes on site, so a ₹500 invoice is unreasonable."
-              </h3>
-
-              <div className="space-y-2 text-xs text-industrial-400">
-                <p className="border-l border-industrial-800 pl-3">
-                  • Assumes 100% of the invoice is cash profit kept by the operator.
-                </p>
-                <p className="border-l border-industrial-800 pl-3">
-                  • Omits capital depreciation of ₹25,000–₹40,000 IGBT power inverters.
-                </p>
-                <p className="border-l border-industrial-800 pl-3">
-                  • Overlooks commercial electricity tariffs and rapid abrasive disc erosion.
-                </p>
-                <p className="border-l border-industrial-800 pl-3">
-                  • Ignores physical hazards, UV eye radiation exposure, and travel logistics.
-                </p>
+                <div className="absolute left-5 right-3 text-left">
+                  <h4 className="font-bold text-white text-xs sm:text-sm tracking-wide">
+                    Built for Industrial Excellence
+                  </h4>
+                  <p className="text-[11px] text-industrial-300 mt-0.5 leading-snug">
+                    Enhancing welding quality with AI-powered and mathematical cost precision.
+                  </p>
+                </div>
               </div>
 
-              <div className="pt-3 border-t border-industrial-800 font-mono text-[11px] text-industrial-500">
-                OUTCOME: Fabricators operate near zero-margin and fail to maintain capital assets.
-              </div>
-            </div>
-
-            {/* Right: The Engineering Cost Model */}
-            <div className="bg-industrial-950 border border-industrial-750 rounded-sm p-6 space-y-4">
-              <div className="flex items-center gap-2 text-forge-400 font-mono text-xs font-bold uppercase">
-                <CheckCircle2 className="w-4 h-4 text-forge-400" />
-                <span>The WeldCost Engineering Framework</span>
-              </div>
-
-              <h3 className="text-base font-bold text-white font-mono">
-                Invoice = Material + Consumables + Machine + Power + Labour + Margin
-              </h3>
-
-              <div className="space-y-2 text-xs text-industrial-300">
-                <p className="border-l border-forge-500/40 pl-3">
-                  • <strong className="text-white">Consumable Depletion:</strong> Electrodes, wires, and abrasive cutting wheels physically disintegrate into the seam.
-                </p>
-                <p className="border-l border-forge-500/40 pl-3">
-                  • <strong className="text-white">Machine Amortization:</strong> High-amperage duty cycles wear semiconductor switches and transformers.
-                </p>
-                <p className="border-l border-forge-500/40 pl-3">
-                  • <strong className="text-white">Commercial Tariff Draw:</strong> 200 Amperes drawn at high voltages incurs documented kilowatt utility charges.
-                </p>
-                <p className="border-l border-forge-500/40 pl-3">
-                  • <strong className="text-white">Skilled Artisan Wage:</strong> Rewarding certified penetration, joint alignment, and structural stability.
-                </p>
-              </div>
-
-              <div className="pt-3 border-t border-industrial-800 font-mono text-[11px] text-emerald-400">
-                OUTCOME: Transparent estimates, mutual trust, and sustainable fabrication.
-              </div>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* Section 3: "Why ₹500?" Interactive Cost Decomposition Section */}
-      <Why500Section />
-
-      {/* Section 4: Service Benchmarks Catalog */}
-      <section className="py-16 bg-industrial-900 border-b border-industrial-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* =========================================================================
+          INTERACTIVE FAST CALCULATOR SIMULATOR & PRICE BREAKDOWN
+          ========================================================================= */}
+      <section className="py-12 border-b border-[#1b212d] bg-[#0c0f14]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1 text-[10px] font-mono uppercase font-bold text-industrial-400">
-                <span className="w-1.5 h-1.5 bg-industrial-500 rounded-xs"></span>
-                <span>Module 05 // Reference Price Index</span>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+                <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">
+                  LIVE BENCHMARK ENGINE
+                </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Standard Welding Service Price Directory
+              <h2 className="text-2xl sm:text-3xl font-black text-white">
+                Simulate Job Expenses in Real-Time
               </h2>
-              <p className="mt-1 text-xs sm:text-sm text-industrial-400 max-w-2xl">
-                Benchmark price ranges derived from verified industrial workshop rates across common fabrication disciplines.
+              <p className="text-xs sm:text-sm text-industrial-400 mt-1 max-w-xl">
+                Test how welding duration, joint counts, and process types impact machine depreciation, power tariffs, and artisan compensation.
               </p>
             </div>
 
             <Link
-              to="/price-guide"
-              className="px-3.5 py-1.5 rounded-sm bg-industrial-800 hover:bg-industrial-750 text-industrial-200 border border-industrial-700 font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors self-start md:self-auto"
+              to="/calculator"
+              className="px-5 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 self-start md:self-auto shadow-md"
             >
-              <span>View All 10 Categories</span>
+              <Calculator className="w-4 h-4" />
+              <span>Full Cost Calculator</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              {
-                title: "Gate & Main Entrance Portals",
-                range: "₹2,500 – ₹12,000",
-                duration: "6 Hours",
-                type: "Arc / MMA",
-                desc: "Driveway swing and sliding gate fabrication with heavy pivot hinges and lock boxes."
-              },
-              {
-                title: "Window Safety Grills & Railings",
-                range: "₹1,500 – ₹6,500",
-                duration: "4 Hours",
-                type: "Arc / Stick",
-                desc: "Square bar and hollow section window child safety enclosures and anti-rust prep."
-              },
-              {
-                title: "Motorcycle Chassis & Silencer Fixes",
-                range: "₹300 – ₹2,200",
-                duration: "1.5 Hours",
-                type: "MIG / CO2",
-                desc: "Subframe cracks, broken footpeg brackets, exhaust silencer rust hole repair."
-              },
-              {
-                title: "Spiral & Straight Metal Staircases",
-                range: "₹8,000 – ₹35,000",
-                duration: "14 Hours",
-                type: "Heavy Arc",
-                desc: "Structural channel stringers, chequered tread plates, and safety handrails."
-              },
-              {
-                title: "High-Pressure Pipe & Flange Welding",
-                range: "₹2,200 – ₹9,500",
-                duration: "5 Hours",
-                type: "TIG / GTAW",
-                desc: "Full penetration root pass and capping for hydraulic, steam, and gas lines."
-              },
-              {
-                title: "Architectural Loft Metal Furniture",
-                range: "₹2,000 – ₹8,500",
-                duration: "5 Hours",
-                type: "MIG / TIG",
-                desc: "Precision square tubing frames, flush ground welds ready for powder coating."
-              }
-            ].map((service, idx) => (
-              <div
-                key={idx}
-                className="bg-industrial-950 border border-industrial-750 rounded-sm p-4 flex flex-col justify-between hover:border-industrial-600 transition-colors"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-forge-400 font-semibold">{service.type}</span>
-                    <span className="text-industrial-500">~{service.duration}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* Input Simulator Panel */}
+            <div className="lg:col-span-6 bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl space-y-5">
+              <h3 className="font-bold text-white text-sm uppercase tracking-wide flex items-center gap-2 pb-3 border-b border-[#1b212d]">
+                <Clock className="w-4 h-4 text-orange-400" />
+                <span>Operating Variables</span>
+              </h3>
+
+              <div className="space-y-4 text-xs font-mono">
+                <div>
+                  <label className="text-industrial-400 block mb-1">Process Type</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {["Arc welding", "MIG welding", "TIG welding", "Gas welding"].map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setMiniWeldingType(t)}
+                        className={`p-2 rounded-lg border text-center transition-all ${
+                          miniWeldingType === t
+                            ? "bg-orange-500 text-white border-orange-500 font-bold"
+                            : "bg-[#0c0f14] border-[#1f2633] text-industrial-400 hover:text-white"
+                        }`}
+                      >
+                        {t.split(" ")[0]}
+                      </button>
+                    ))}
                   </div>
-
-                  <h3 className="text-sm font-bold text-white">
-                    {service.title}
-                  </h3>
-
-                  <p className="text-xs text-industrial-400 leading-relaxed">
-                    {service.desc}
-                  </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-industrial-800 flex items-center justify-between font-mono">
-                  <span className="text-[10px] text-industrial-500 uppercase">EST. RANGE</span>
-                  <span className="text-xs font-bold text-white">{service.range}</span>
+                <div>
+                  <div className="flex justify-between text-industrial-400 mb-1">
+                    <span>Arc & Rigging Duration:</span>
+                    <strong className="text-white font-bold">{miniHours} hrs</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.5"
+                    max="10"
+                    step="0.5"
+                    value={miniHours}
+                    onChange={(e) => setMiniHours(parseFloat(e.target.value))}
+                    className="w-full accent-orange-500 bg-[#1f2633] rounded-lg h-2"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-industrial-400 mb-1">
+                    <span>Structural Joint Count:</span>
+                    <strong className="text-white font-bold">{miniJoints} joints</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="2"
+                    max="30"
+                    step="1"
+                    value={miniJoints}
+                    onChange={(e) => setMiniJoints(parseInt(e.target.value))}
+                    className="w-full accent-orange-500 bg-[#1f2633] rounded-lg h-2"
+                  />
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Simulated Result Breakdown Card */}
+            <div className="lg:col-span-6 bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+              <div>
+                <h3 className="font-bold text-white text-sm uppercase tracking-wide flex items-center justify-between pb-3 border-b border-[#1b212d]">
+                  <span className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-orange-400" />
+                    <span>Cost Ledger Output</span>
+                  </span>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    CALCULATED
+                  </span>
+                </h3>
+
+                <div className="divide-y divide-[#1b212d] font-mono text-xs pt-3">
+                  <div className="py-2 flex justify-between text-industrial-400">
+                    <span>Machine Wear & Maintenance</span>
+                    <span className="text-white">₹{teaserMachineCost}</span>
+                  </div>
+                  <div className="py-2 flex justify-between text-industrial-400">
+                    <span>Grid Electricity (~{Math.round(miniHours * 4.5 * 0.55)} kWh)</span>
+                    <span className="text-white">₹{teaserPowerCost}</span>
+                  </div>
+                  <div className="py-2 flex justify-between text-industrial-400">
+                    <span>Electrodes, Wire & Abrasive Discs</span>
+                    <span className="text-white">₹{teaserConsumables}</span>
+                  </div>
+                  <div className="py-2 flex justify-between text-industrial-400">
+                    <span>Artisan Labour & Fitter Hours</span>
+                    <span className="text-white">₹{teaserLabour}</span>
+                  </div>
+                  <div className="py-2 flex justify-between text-industrial-400">
+                    <span>Transit & Safety Gear Overhead</span>
+                    <span className="text-white">₹80</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-[#1b212d] flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-industrial-400 uppercase font-mono block">Recommended Fair Bid</span>
+                  <span className="text-2xl font-black text-orange-500 font-mono">₹{teaserPrice}</span>
+                </div>
+                <Link
+                  to="/calculator"
+                  className="px-4 py-2 rounded-full bg-orange-500/10 hover:bg-orange-500 hover:text-white text-orange-400 border border-orange-500/30 font-bold text-xs uppercase tracking-wider transition-all"
+                >
+                  Adjust Parameters →
+                </Link>
+              </div>
+            </div>
+
           </div>
 
         </div>
       </section>
 
-      {/* Section 5: Engineering Callout */}
-      <section className="py-16 bg-industrial-950">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-industrial-900 border border-industrial-750 text-industrial-400 font-mono text-[10px] uppercase">
-            <Scale className="w-3.5 h-3.5 text-forge-400" />
-            <span>Industrial Transparency Standard</span>
-          </div>
+      {/* =========================================================================
+          WHY 500 SECTION: TRANSPARENCY AUDIT
+          ========================================================================= */}
+      <section className="py-12 border-b border-[#1b212d] bg-[#0a0d12]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Why500Section />
+        </div>
+      </section>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            Ready to Verify or Generate a Fabrication Quote?
-          </h2>
+      {/* =========================================================================
+          THREE PILLAR CALLOUTS
+          ========================================================================= */}
+      <section className="py-12 bg-[#0c0f14]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div className="bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+                <Wrench className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-white text-base">Equipment Catalog</h3>
+              <p className="text-xs text-industrial-400 leading-relaxed">
+                Explore 19+ industrial tools: inverter machines, auto-darkening helmets, regulators, cutting discs, and their cost-per-job amortization.
+              </p>
+              <Link to="/tools" className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-400 hover:text-orange-300">
+                <span>View Equipment Datasheets</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
 
-          <p className="text-xs sm:text-sm text-industrial-400 max-w-xl mx-auto leading-relaxed">
-            Eliminate pricing uncertainty with structured engineering BOM models. Generate formal quote sheets or configure your workshop's custom machine amortization.
-          </p>
+            <div className="bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+                <Scale className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-white text-base">Fabrication Price Guide</h3>
+              <p className="text-xs text-industrial-400 leading-relaxed">
+                Benchmark market price ranges for 10 structural packages including main gates, window security grills, vehicle repairs, and piping.
+              </p>
+              <Link to="/price-guide" className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-400 hover:text-orange-300">
+                <span>Explore Service Ranges</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/quote-generator"
-              className="px-5 py-2.5 rounded-sm bg-forge-600 hover:bg-forge-500 text-white font-mono font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-1.5"
-            >
-              <span>Generate Formal Quotation</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+                <HelpCircle className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-white text-base">Why Does Welding Cost?</h3>
+              <p className="text-xs text-industrial-400 leading-relaxed">
+                Understand "The 1-Hour Illusion" and discover why a customer's charge must recover machinery, electricity, consumables, safety, and artisan mastery.
+              </p>
+              <Link to="/why-does-it-cost" className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-400 hover:text-orange-300">
+                <span>Read Cost Analysis</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
 
-            <Link
-              to="/welder-dashboard"
-              className="px-5 py-2.5 rounded-sm bg-industrial-900 hover:bg-industrial-850 text-industrial-200 border border-industrial-750 font-mono font-semibold text-xs uppercase tracking-wider transition-colors"
-            >
-              <span>Access Welder Console</span>
-            </Link>
           </div>
         </div>
       </section>

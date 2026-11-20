@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../services/api";
-import { 
-  BookOpen, 
-  Search, 
-  Clock, 
-  Layers, 
-  ArrowRight, 
+import {
+  BookOpen,
+  Search,
+  Clock,
+  Layers,
+  ArrowRight,
   ShieldAlert,
-  Zap
+  Zap,
+  ChevronRight,
+  Info
 } from "lucide-react";
 
 export default function PriceGuide() {
@@ -16,7 +18,6 @@ export default function PriceGuide() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const navigate = useNavigate();
 
   const categories = [
     "All",
@@ -49,53 +50,58 @@ export default function PriceGuide() {
     return () => clearTimeout(timer);
   }, [search, selectedCategory]);
 
-  return (
-    <div className="min-h-screen bg-industrial-950 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-industrial-800">
-          <div>
-            <div className="flex items-center gap-2 mb-1 text-[10px] font-mono font-bold text-forge-400 uppercase">
-              <span className="w-2 h-2 bg-forge-500 rounded-xs"></span>
-              <span>MARKET BENCHMARK SPECIFICATION // SERVICE DIRECTORY</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Welding & Metal Fabrication Service Matrix
-            </h1>
-            <p className="mt-1 text-xs text-industrial-400 max-w-2xl leading-relaxed">
-              Empirical cost benchmarks for 10 common fabrication specializations. Use these ranges as baseline reference models when scoping and verifying contractor estimates.
-            </p>
-          </div>
+  const complexityColor = (c) => {
+    if (!c) return "text-gray-400";
+    const cl = c.toLowerCase();
+    if (cl.includes("low") || cl.includes("simple")) return "text-emerald-400";
+    if (cl.includes("high") || cl.includes("complex")) return "text-red-400";
+    return "text-orange-400";
+  };
 
-          <div className="p-3 bg-industrial-900 border border-industrial-750 rounded-sm text-[11px] font-mono text-industrial-400 max-w-xs">
-            <span className="text-forge-400 font-bold block mb-0.5">ESTIMATE DISCLAIMER:</span>
-            Prices represent market approximations. Final contractual amounts depend on design complexity, metal gauge, site access, and artisan certification.
+  return (
+    <div className="min-h-screen bg-[#0c0f14] py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-widest">
+            <BookOpen className="w-3.5 h-3.5" />
+            Service Price Guide
           </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            Welding &amp; Fabrication{" "}
+            <span className="text-orange-500">Price Ranges</span>
+          </h1>
+          <p className="text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Estimated market benchmarks for common welding services. Use these ranges
+            to understand fair pricing before requesting a quote.
+          </p>
         </div>
 
-        {/* Filter and Search Bar */}
-        <div className="bg-industrial-900 border border-industrial-750 rounded-sm p-3 flex flex-col md:flex-row items-center justify-between gap-3 shadow-panel">
-          <div className="relative w-full md:w-80">
-            <Search className="w-3.5 h-3.5 text-industrial-500 absolute left-3 top-1/2 -translate-y-1/2" />
+        {/* Search + Filter */}
+        <div className="bg-[#141820] border border-[#1f2633] rounded-2xl p-5 space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter by service, metallurgy, keyword..."
+              placeholder="Search services, materials, keywords…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-industrial-950 border border-industrial-750 focus:border-forge-500 rounded-xs pl-9 pr-3 py-1.5 text-xs font-mono text-white placeholder-industrial-500 outline-none"
+              className="w-full bg-[#0c0f14] border border-[#1f2633] focus:border-orange-500 rounded-full pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition-colors"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-1 w-full md:w-auto font-mono text-xs">
+          {/* Category Pills */}
+          <div className="flex flex-wrap items-center gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-2.5 py-1 rounded-xs transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
                   selectedCategory === cat
-                    ? "bg-industrial-800 text-white border border-industrial-600 font-bold"
-                    : "bg-industrial-950 text-industrial-400 hover:text-white border border-industrial-800"
+                    ? "bg-orange-500 text-white"
+                    : "bg-[#0c0f14] border border-[#1f2633] text-gray-400 hover:text-white hover:border-gray-500"
                 }`}
               >
                 {cat}
@@ -104,97 +110,115 @@ export default function PriceGuide() {
           </div>
         </div>
 
-        {/* Services List Matrix */}
+        {/* Services Grid */}
         {loading ? (
           <div className="py-20 flex justify-center">
-            <div className="animate-spin rounded-xs h-8 w-8 border-t-2 border-b-2 border-forge-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
           </div>
         ) : services.length === 0 ? (
-          <div className="bg-industrial-900 border border-industrial-800 rounded-sm p-12 text-center text-industrial-400 font-mono text-xs">
-            <div className="text-white font-bold">No Matching Service Category Found</div>
-            <div className="text-industrial-500 mt-1">Try resetting the filter or searching for terms like 'Gate' or 'Pipe'.</div>
+          <div className="bg-[#141820] border border-[#1f2633] rounded-2xl p-16 text-center">
+            <div className="text-white font-semibold text-sm">No Services Found</div>
+            <div className="text-gray-500 text-xs mt-1">Try resetting the filter or search for terms like 'Gate' or 'Pipe'.</div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {services.map((srv) => (
               <div
                 key={srv.id}
-                className="bg-industrial-900 border border-industrial-750 hover:border-industrial-600 rounded-sm p-5 flex flex-col justify-between transition-colors shadow-panel"
+                className="bg-[#141820] border border-[#1f2633] hover:border-orange-500/30 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 group"
               >
-                <div className="space-y-3">
-                  {/* Top Metadata */}
-                  <div className="flex items-center justify-between font-mono text-[11px]">
-                    <span className="text-forge-400 font-semibold uppercase tracking-wider">
-                      PKG-{srv.id.toString().padStart(2, '0')} // {srv.category}
-                    </span>
-                    <span className="text-industrial-500 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>~{srv.typical_duration_hours} hrs duration</span>
-                    </span>
-                  </div>
-
-                  {/* Title & Desc */}
-                  <div>
-                    <h3 className="text-sm font-bold text-white tracking-tight">
-                      {srv.name}
-                    </h3>
-                    <p className="text-xs text-industrial-400 mt-1 leading-relaxed">
-                      {srv.description}
-                    </p>
-                  </div>
-
-                  {/* Price Specification Ledger Box */}
-                  <div className="p-3 bg-industrial-950 rounded-xs border border-industrial-800 flex items-center justify-between font-mono">
+                <div className="space-y-4">
+                  {/* Top Row */}
+                  <div className="flex items-start justify-between gap-3">
                     <div>
-                      <span className="text-[10px] text-industrial-500 uppercase block">
-                        Estimated Market Range (₹)
-                      </span>
-                      <div className="text-base font-bold text-white">
-                        ₹{srv.min_price.toLocaleString()} – ₹{srv.max_price.toLocaleString()}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">
+                          {srv.category}
+                        </span>
+                        {srv.complexity && (
+                          <span className={`text-[10px] font-semibold ${complexityColor(srv.complexity)}`}>
+                            · {srv.complexity}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-base font-bold text-white leading-tight">{srv.name}</h3>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-1 text-gray-500 text-xs">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>~{srv.typical_duration_hours}h</span>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-xs text-gray-400 leading-relaxed">{srv.description}</p>
+
+                  {/* Price Range Badge */}
+                  <div className="bg-[#0c0f14] border border-[#1f2633] rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1">Estimated Range</span>
+                      <div className="text-xl font-bold text-white">
+                        ₹{srv.min_price.toLocaleString()}
+                        <span className="text-gray-400 font-normal text-sm"> – </span>
+                        ₹{srv.max_price.toLocaleString()}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-industrial-500 uppercase block">Complexity</span>
-                      <span className="text-xs font-semibold text-industrial-300">{srv.complexity}</span>
+                    <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                      <Layers className="w-5 h-5 text-orange-400" />
                     </div>
                   </div>
 
-                  {/* Materials & Process Spec */}
-                  <div className="space-y-1 text-xs text-industrial-400 font-sans border-t border-industrial-800/80 pt-2.5">
+                  {/* Materials & Process */}
+                  <div className="space-y-2 pt-1">
                     {srv.typical_materials && (
-                      <div className="flex items-start gap-2 text-[11px]">
-                        <span className="font-mono text-industrial-500 uppercase shrink-0 text-[10px]">MATERIALS:</span>
-                        <span className="text-industrial-300">{srv.typical_materials}</span>
+                      <div className="flex items-start gap-2 text-xs">
+                        <span className="text-gray-500 shrink-0 mt-0.5">Materials:</span>
+                        <span className="text-gray-300">{srv.typical_materials}</span>
                       </div>
                     )}
                     {srv.recommended_welding_type && (
-                      <div className="flex items-start gap-2 text-[11px]">
-                        <span className="font-mono text-industrial-500 uppercase shrink-0 text-[10px]">PROCESS:</span>
-                        <span className="text-forge-400 font-mono">{srv.recommended_welding_type}</span>
+                      <div className="flex items-start gap-2 text-xs">
+                        <span className="text-gray-500 shrink-0 mt-0.5">Process:</span>
+                        <span className="text-orange-400 font-medium">{srv.recommended_welding_type}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Card Action */}
-                <div className="mt-4 pt-3 border-t border-industrial-800 flex items-center justify-between gap-2 font-mono text-xs">
+                {/* CTA */}
+                <div className="mt-5 pt-4 border-t border-[#1f2633] flex items-center gap-2">
                   <Link
                     to={`/quote-generator?service=${encodeURIComponent(srv.name)}`}
-                    className="flex-1 py-1.5 rounded-xs bg-forge-600 hover:bg-forge-500 text-white font-bold text-center transition-colors uppercase tracking-wider text-[11px]"
+                    className="flex-1 py-2 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-xs text-center transition-colors flex items-center justify-center gap-1.5"
                   >
-                    Generate Quote For This Spec
+                    Get Quote
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                   <Link
                     to="/calculator"
-                    className="px-3 py-1.5 rounded-xs bg-industrial-950 hover:bg-industrial-850 text-industrial-400 hover:text-white border border-industrial-800 transition-colors uppercase tracking-wider text-[11px]"
+                    className="px-4 py-2 rounded-full bg-[#0c0f14] border border-[#1f2633] hover:border-gray-500 text-gray-400 hover:text-white text-xs font-medium transition-colors"
                   >
-                    Open Engine
+                    Calculator
                   </Link>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+        {/* Disclaimer */}
+        <div className="bg-[#141820] border border-orange-500/20 rounded-2xl p-5 flex items-start gap-4">
+          <div className="shrink-0 w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center">
+            <Info className="w-4.5 h-4.5 text-orange-400" />
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-white mb-1">Price Estimate Disclaimer</div>
+            <p className="text-xs text-gray-400 leading-relaxed">
+              All prices shown are market estimates only and are not fixed quotations.
+              Final costs depend on material grade, design complexity, site access, local labour rates,
+              consumable prices, and other job-specific conditions. Always request a detailed quote from your welder.
+            </p>
+          </div>
+        </div>
 
       </div>
     </div>

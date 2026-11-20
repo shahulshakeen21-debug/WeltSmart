@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../services/api";
 import { 
   ArrowRight, 
-  Cpu, 
   HelpCircle,
   FileCheck2,
   Sliders,
@@ -15,11 +15,11 @@ export default function Why500Section() {
   const [loading, setLoading] = useState(false);
 
   const presets = [
-    { label: "₹300 (Exhaust Patch)", value: 300 },
+    { label: "₹300 (Patch Weld)", value: 300 },
     { label: "₹500 (Gate Hinge Fix)", value: 500 },
-    { label: "₹1,200 (Grill Reinforcement)", value: 1200 },
+    { label: "₹1,200 (Grill Reinforce)", value: 1200 },
     { label: "₹2,500 (Door Subframe)", value: 2500 },
-    { label: "₹5,000 (Sliding Track Overhaul)", value: 5000 },
+    { label: "₹5,000 (Track Overhaul)", value: 5000 },
   ];
 
   const fetchBreakdown = async (targetPrice) => {
@@ -45,152 +45,157 @@ export default function Why500Section() {
   };
 
   return (
-    <section id="why-500" className="py-16 bg-industrial-950 border-t border-b border-industrial-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] uppercase font-bold text-forge-400">
-              <span className="inline-block w-2 h-2 bg-forge-500 rounded-xs"></span>
-              <span>Module 04 // Empirical Cost Audit</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Why Does a ₹{price.toLocaleString()} Weld Cost ₹{price.toLocaleString()}?
-            </h2>
-            <p className="mt-1.5 text-xs sm:text-sm text-industrial-400 max-w-2xl">
-              Customers frequently assume a 45-minute repair is pure income. This engineering ledger demonstrates where each rupee actually goes.
-            </p>
+    <div id="why-500" className="space-y-6">
+      
+      {/* Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-1 h-4 bg-orange-500 rounded-full inline-block" />
+            <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">
+              EMPIRICAL COST AUDIT
+            </span>
           </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[11px] font-mono text-industrial-400 uppercase">Input Amount:</span>
-            <div className="flex items-center bg-industrial-900 border border-industrial-750 px-3 py-1.5 rounded-sm">
-              <span className="text-forge-400 font-mono text-xs font-bold mr-1">₹</span>
-              <input
-                type="number"
-                min="50"
-                max="100000"
-                step="50"
-                value={price}
-                onChange={(e) => handlePriceChange(e.target.value)}
-                className="w-24 bg-transparent font-mono font-bold text-sm text-white outline-none"
-              />
-            </div>
-          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-white">
+            Why Does a ₹{price.toLocaleString()} Weld Cost ₹{price.toLocaleString()}?
+          </h2>
+          <p className="text-xs sm:text-sm text-industrial-400 mt-1 max-w-2xl leading-relaxed">
+            Customers often assume that a 15-minute welding job costs the welder nothing. This mathematical decomposition reveals the exact 8 expenses consumed behind every invoice.
+          </p>
         </div>
 
-        {/* Preset Selector Strip */}
-        <div className="flex flex-wrap items-center gap-1.5 mb-6 p-2 bg-industrial-900 border border-industrial-800 rounded-sm">
-          <span className="text-[11px] font-mono text-industrial-400 px-2 shrink-0">
-            Standard Task Benchmarks:
-          </span>
+        {/* Quick Amount Presets */}
+        <div className="flex flex-wrap items-center gap-1.5 self-start md:self-auto">
           {presets.map((p) => (
             <button
               key={p.value}
               onClick={() => handlePriceChange(p.value)}
-              className={`px-2.5 py-1 text-xs font-mono rounded-xs transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all ${
                 price === p.value
-                  ? "bg-industrial-800 text-white border border-industrial-600 font-bold"
-                  : "bg-industrial-950 text-industrial-400 hover:text-white border border-industrial-800"
+                  ? "bg-orange-500 text-white font-bold shadow-md shadow-orange-500/20"
+                  : "bg-[#121620] border border-[#1f2633] text-industrial-400 hover:text-white hover:border-orange-500/40"
               }`}
             >
               {p.label}
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Proportional Technical Stack Bar */}
+      {/* Main Audit Card */}
+      <div className="bg-[#121620] border border-[#1f2633] rounded-2xl p-6 shadow-xl space-y-6">
+        
+        {/* Custom Price Slider */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-[#1b212d]">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <span className="text-xs font-mono text-industrial-400 uppercase">Input Billed Quote:</span>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-400 font-mono text-xs font-bold">₹</span>
+              <input
+                type="number"
+                min="100"
+                step="50"
+                value={price}
+                onChange={(e) => handlePriceChange(e.target.value)}
+                className="bg-[#0c0f14] border border-[#1f2633] rounded-xl pl-6 pr-3 py-1.5 text-xs font-mono text-white w-32 focus:border-orange-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-industrial-400">
+            <span>Net Artisan Retention:</span>
+            <strong className="text-emerald-400 font-bold text-sm">
+              ₹{data?.breakdown?.find(b => b.key === "profit")?.amount || Math.round(price * 0.12)}
+            </strong>
+            <span className="text-[10px] text-industrial-500">
+              (~{data?.breakdown?.find(b => b.key === "profit")?.pct || 12}%)
+            </span>
+          </div>
+        </div>
+
+        {/* Proportional Cost Bar */}
         {data && (
-          <div className="mb-6 p-4 bg-industrial-900 border border-industrial-800 rounded-sm space-y-3">
-            <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-industrial-400">
-                Direct Operating Recovery: <strong className="text-white">₹{data.total_operating_cost.toLocaleString()} (88%)</strong>
-              </span>
-              <span className="text-emerald-400 font-semibold">
-                Net Retained Margin: ₹{data.net_profit.toLocaleString()} (12%)
-              </span>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center text-xs font-mono text-industrial-400">
+              <span>EXPENSE CONSUMPTION SPECTRUM</span>
+              <span>100% AUDIT</span>
+            </div>
+            
+            <div className="h-5 w-full bg-[#0c0f14] rounded-full overflow-hidden flex border border-[#1f2633]">
+              {data.breakdown.map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{ width: `${item.pct}%`, backgroundColor: item.color }}
+                  className="h-full relative group transition-all duration-300 hover:opacity-90"
+                  title={`${item.label}: ₹${item.amount} (${item.pct}%)`}
+                />
+              ))}
             </div>
 
-            <div className="h-3 w-full bg-industrial-950 rounded-xs overflow-hidden flex border border-industrial-750">
-              <div style={{ width: '88%' }} className="bg-industrial-700 h-full border-r border-industrial-600" title="Operating Cost: 88%" />
-              <div style={{ width: '12%' }} className="bg-forge-500 h-full" title="Net Margin: 12%" />
+            {/* Micro Legend */}
+            <div className="flex flex-wrap items-center gap-3 pt-2 text-[11px] font-mono">
+              {data.breakdown.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-1.5">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-industrial-300">{item.label}</span>
+                  <span className="text-industrial-500">₹{item.amount}</span>
+                </div>
+              ))}
             </div>
+          </div>
+        )}
 
-            <div className="flex items-center justify-between text-[10px] font-mono text-industrial-500">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 bg-industrial-700 rounded-xs inline-block"></span>
-                  <span>Hard Costs (Depreciation, Grid Power, Filler Metals, Discs, Transport)</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 bg-forge-500 rounded-xs inline-block"></span>
-                  <span>Retained Profit (12%)</span>
-                </span>
+        {/* Breakdown Items Grid */}
+        {data && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+            {data.breakdown.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-[#0c0f14]/80 border border-[#1b212d] rounded-xl p-3.5 space-y-2 hover:border-orange-500/40 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-white truncate pr-2">{item.label}</span>
+                  <span
+                    className="font-mono text-xs font-bold shrink-0"
+                    style={{ color: item.color }}
+                  >
+                    ₹{item.amount}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] font-mono text-industrial-400">
+                  <span>Share</span>
+                  <span>{item.pct}%</span>
+                </div>
+                <p className="text-[11px] text-industrial-400 leading-snug line-clamp-2">
+                  {item.detail}
+                </p>
               </div>
-              <span>Total: ₹{price.toLocaleString()}</span>
-            </div>
+            ))}
           </div>
         )}
 
-        {/* Detailed Decomposition Table */}
-        {data && (
-          <div className="bg-industrial-900 border border-industrial-750 rounded-sm overflow-hidden mb-6">
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead>
-                  <tr className="bg-industrial-850 border-b border-industrial-750 text-[10px] font-mono text-industrial-400 uppercase tracking-wider">
-                    <th className="py-2.5 px-4 font-semibold">Cost Component</th>
-                    <th className="py-2.5 px-3 font-mono font-semibold text-right">Share (%)</th>
-                    <th className="py-2.5 px-4 font-mono font-semibold text-right">Amount (₹)</th>
-                    <th className="py-2.5 px-4 font-semibold">Engineering Factor & Asset Impact</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-industrial-800 font-sans text-xs">
-                  {data.items.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-industrial-850/40 transition-colors">
-                      <td className="py-2.5 px-4 font-medium text-white">
-                        {item.item}
-                      </td>
-                      <td className="py-2.5 px-3 font-mono text-right text-industrial-400">
-                        {item.percentage}%
-                      </td>
-                      <td className="py-2.5 px-4 font-mono font-bold text-right text-white">
-                        ₹{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                      </td>
-                      <td className="py-2.5 px-4 text-industrial-400 text-[11px] leading-relaxed">
-                        {item.reality}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Bottom Insight Banner */}
+        <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5 text-orange-300">
+            <HelpCircle className="w-4 h-4 shrink-0 text-orange-400" />
+            <span>
+              If a customer asks for a ₹200 discount on a ₹500 job, the welder actually operates at a net financial loss!
+            </span>
           </div>
-        )}
-
-        {/* Engineering Takeaway Summary Callout */}
-        {data && (
-          <div className="p-4 bg-industrial-900 border-l-2 border-l-forge-500 border border-industrial-800 rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-forge-400">
-                AUDIT CONCLUSION
-              </span>
-              <p className="text-xs text-industrial-300 max-w-3xl leading-relaxed">
-                {data.takeaway_message} Welding equipment operates like an on-site factory drawing high utility currents and consuming heavy asset depreciation. Quoting below this threshold causes the fabricator to subsidize the job out of their family income.
-              </p>
-            </div>
-            <a
-              href="/calculator"
-              className="shrink-0 px-4 py-2 bg-industrial-800 hover:bg-industrial-750 text-white font-mono font-semibold text-xs rounded-sm border border-industrial-700 transition-colors flex items-center gap-1.5"
-            >
-              <span>Test Custom Specs</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
-          </div>
-        )}
+          <Link
+            to="/why-does-it-cost"
+            className="text-orange-400 hover:text-orange-300 font-bold inline-flex items-center gap-1 shrink-0"
+          >
+            <span>Read 1-Hour Illusion Whitepaper</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
 
       </div>
-    </section>
+
+    </div>
   );
 }

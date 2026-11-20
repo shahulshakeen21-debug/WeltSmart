@@ -9,26 +9,26 @@ export default {
     extend: {
       colors: {
         industrial: {
-          950: '#0a0c10', // Deepest background
-          900: '#11141a', // Panel base
-          850: '#161a22', // Card & table header
-          800: '#1d222c', // Surface raised
-          750: '#252b37', // Border / separator
-          700: '#2e3645', // Highlight border
-          600: '#434d61', // Dim text / disabled
-          500: '#627087', // Muted text
-          400: '#8e9eb5', // Secondary text
-          300: '#b8c5d6', // Body text
-          200: '#dce3ec', // High contrast text
-          100: '#f1f5f9', // Bright text
+          950: '#0c0f14', // Exact dark canvas from reference image
+          900: '#121620', // Card surface
+          850: '#161c28', // Raised card surface
+          800: '#1c2332', // Borders / subtle contrast
+          750: '#232c3f', // Crisp dividers
+          700: '#2e3950', // Highlighted borders
+          600: '#465573', // Dim icons
+          500: '#64748b', // Muted text
+          400: '#94a3b8', // Secondary text
+          300: '#cbd5e1', // Primary body text
+          200: '#e2e8f0', // High contrast text
+          100: '#f8fafc', // Bright white text
           50: '#ffffff',
         },
         forge: {
           500: '#ea580c', // Industrial safety orange
           600: '#c2410c',
-          400: '#f97316',
+          400: '#f97316', // Bright vivid orange from reference
           300: '#fb923c',
-          glow: 'rgba(234, 88, 12, 0.15)',
+          glow: 'rgba(249, 115, 22, 0.25)',
         }
       },
       fontFamily: {
@@ -36,18 +36,18 @@ export default {
         mono: ['JetBrains Mono', 'ui-monospace', 'Menlo', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        'panel': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3)',
-        'panel-raised': '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)',
-        'inner-edge': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+        'card': '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3)',
+        'orange-glow': '0 0 25px rgba(249, 115, 22, 0.25)',
       },
       borderRadius: {
         'xs': '2px',
         'sm': '4px',
-        'DEFAULT': '6px',
-        'md': '6px',
-        'lg': '8px',
-        'xl': '10px',
-        '2xl': '12px',
+        'DEFAULT': '8px',
+        'md': '10px',
+        'lg': '12px',
+        'xl': '14px',
+        '2xl': '16px',
+        '3xl': '24px',
       }
     },
   },
